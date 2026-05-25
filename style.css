@@ -1,0 +1,25 @@
+body{
+    background-color: rgb(233, 158, 158);
+}
+.green-buy{
+    background-color: greenyellow;
+    padding: 10px;
+}
+.red-sell{
+    background-color: red;
+    padding: 10px;
+    }
+.separate-list{
+     display: flex;
+     justify-content:space-between;
+     align-items:flex-start;
+    
+    }   
+    .length-chart{
+
+    width:80%;
+
+    height:700px;
+
+    border:2px solid white;
+}
