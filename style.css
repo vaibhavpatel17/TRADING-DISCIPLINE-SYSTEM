@@ -11,15 +11,19 @@ body{
     }
 .separate-list{
      display: flex;
-     justify-content:space-between;
-     align-items:flex-start;
+     justify-content:center;
+     align-items:center;
     
     }   
-    .length-chart{
+    .chart-area{
 
     width:80%;
 
     height:700px;
 
     border:2px solid white;
+}
+.list-area{
+    position: relative;
+    left: 50px;
 }
