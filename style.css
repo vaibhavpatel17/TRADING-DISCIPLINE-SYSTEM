@@ -29,5 +29,13 @@ body{
 }
 
 .left-panel{
-    height: 500px
+    height: 700px;
+}
+table{
+    width: 500px;
+}
+.trade-history{
+    display: flex;
+    gap: 250px;      ### using gaps instead of justifying the space 
+    
 }
