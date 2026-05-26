@@ -30,6 +30,7 @@ body{
 
 .left-panel{
     height: 700px;
+   align-items: ;
 }
 table{
     width: 500px;
@@ -38,4 +39,8 @@ table{
     display: flex;
     gap: 250px;      ### using gaps instead of justifying the space 
     
+}
+.chart-area{
+    display: flex;
+    justify-content:space-between ;
 }
