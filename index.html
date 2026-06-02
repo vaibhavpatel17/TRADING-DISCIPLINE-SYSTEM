@@ -6,18 +6,90 @@
 </head>
 <body>
     <main>
+      <section class="nav-bar">
+      <section class="sym-bol">
+        <h2>SYMBOL</h2>
+        </section>
+        <section class="lo-go">
+            <h2>LOGO</h2>
+                </section>
+      <section class="time-frame" >
+        
+           
+     <section class="time-selection">                           
+        <input type="radio" name="" id="">1 min
+         <input type="radio" name="" id="">5 min
+          <input type="radio" name="" id="">15 min
+           <input type="radio" name="" id="">1 hr
+            <input type="radio" name="" id="">4hr
+     </section>
+      </section>
+      
+        <button id="toggle-checklist">
+            hide checklist
+        </button>
+      </section>
+      </section>
+      <br>
 <section class="separate-list"> 
     <section class="left-panel">
-        <h1>LEFT PANEL</h1>
+        <h2>LEFT PANEL</h2>
+        <section class="buy-sell">
+            <button> BUY </button>
+            <button> SELL </button>
+            <br>
+            <input type="number"> quantity 
+            <br>
+            <input type="number"> SL
+            <br>
+            <input type="number">TP
+        
         </section>
-    <section class="chart-area">
-        <h2>CHART AREA </h2> 
-    </section>
-    <section class="right-panel">
+        <section class="trade-intelligience">
+            <section>
+                <h3>🧠 TRADE INTELLIGENCE</h3>
+            </section>
+            <section class="setup-confidence">
+                
+            </section>
+            <section class="similar-trades">
+                <h2>PAST 5 SIMILAR TRADES</h2>
+                <br>
+                <h4>4W/1L</h4>
+                <BR></BR>
+                <h2>AVERAGE WIN RATE </h2>
+                 </section>
+                 <section class="session-time">
+                 </section>
+                 <section class="present-liquidity">
+                 </section>
+                 <section class="pre-trade">
+                    <h2>pre trade conflusions </h2>
+                 </section>
+            
+        </section>
+        </section>
+
+
+        <section class="chart-area">
+            <h1>CHART_AREA </h1>
+        </section>
+        <section class="right-panel">
         <h2>RIGHT PANEL</h2>
+         <input type="radio"> FVG 
     </section>
+    </section>
+    
+
+    <section><h1>TRADE  HISTORY</h1> </section>
+    <section class="trade-history">
+    <section><h1>data</h1></section>
+    <section><h1>pair</h1> </section>
+    <section><h1>setup</h1></section>
+    <section><h1>R:R</h1></section>
+    <section><h1>PnL</h1></section>
+
 </section>
-<section>trade-history </section>
 <table>
     <table border="1">
         <tr>
@@ -31,11 +103,26 @@
             <label for="profit">profit</label>
              <input type="radio" id="loss">
              <label for="loss">loss</label>
+            </table> 
              </td>
 
         </tr>
-</table> 
 </main>
+<script>
+    const button=document.getElementById("toggle-checklist")
+    const checklist=document.querySelector(".right-panel")
+    button.addEventListener("click",function(){  
+       if(checklist.style.display==="none"){         #in the checklist go to style and change the display
+       checklist.style.display="block";         
+       }
+    else{
+        checklist.style.display="none"
+    }
+    
+       
+
+});
+</script>
 </body>
 </html>
 
