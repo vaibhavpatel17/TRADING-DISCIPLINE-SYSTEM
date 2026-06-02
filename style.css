@@ -55,3 +55,35 @@ table{
      background: linear-gradient(to right, #3498db, #2ecc71);
      border-radius: 10px; 
 }
+.chart-area{
+
+    width:70%;
+
+    height:700px;
+
+    border:2px solid black;
+    padding:10px;
+}
+.separate-list{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:flex-start;
+}
+.left-panel{
+    width:15%;
+}
+
+.right-panel{
+    width:15%;
+} 
+.nav-bar{
+
+    display:flex;
+
+    gap:100px;
+
+    align-items:center;
+}

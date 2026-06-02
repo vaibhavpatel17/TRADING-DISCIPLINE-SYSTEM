@@ -14,7 +14,7 @@
             <h2>LOGO</h2>
                 </section>
       <section class="time-frame" >
-        <h2>TIME FRAME </h2>
+        
            
      <section class="time-selection">                           
         <input type="radio" name="" id="">1 min
@@ -23,6 +23,11 @@
            <input type="radio" name="" id="">1 hr
             <input type="radio" name="" id="">4hr
      </section>
+      </section>
+      
+        <button id="toggle-checklist">
+            hide checklist
+        </button>
       </section>
       </section>
       <br>
@@ -64,6 +69,11 @@
             
         </section>
         </section>
+
+
+        <section class="chart-area">
+            <h1>CHART_AREA </h1>
+        </section>
         <section class="right-panel">
         <h2>RIGHT PANEL</h2>
          <input type="radio"> FVG 
@@ -93,11 +103,26 @@
             <label for="profit">profit</label>
              <input type="radio" id="loss">
              <label for="loss">loss</label>
+            </table> 
              </td>
 
         </tr>
-</table> 
 </main>
+<script>
+    const button=document.getElementById("toggle-checklist")
+    const checklist=document.querySelector(".right-panel")
+    button.addEventListener("click",function(){
+       if(checklist.style.display==="none"){
+       checklist.style.display="block";
+       }
+    else{
+        checklist.style.display="none"
+    }
+    
+       
+
+});
+</script>
 </body>
 </html>
 
