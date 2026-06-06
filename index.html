@@ -80,21 +80,28 @@
     </section>
     </section>
     
-
     <section><h1>TRADE  HISTORY</h1> </section>
-    <section class="trade-history">
-    <section><h1>data</h1></section>
-    <section><h1>pair</h1> </section>
-    <section><h1>setup</h1></section>
-    <section><h1>R:R</h1></section>
-    <section><h1>PnL</h1></section>
-
-</section>
 <table>
     <table border="1">
+    <section class="trade-history">
         <tr>
-        <td>PAIR</td>
-        <td>RESULTS</td>
+            <td><section><h1>date</h1></section></td>
+            <td><section><h1>pair</h1> </section></td>
+            <td> <section><h1>setup</h1></section></td>
+            <td><section><h1>R:R</h1></section></td>
+            <section><h1>R:R</h1></section>
+            <section><h1>PnL</h1></section>
+        </tr>
+</section>
+
+        <tr>
+        <td><input type="datetime-local" name="" id=""></td>
+        <td><input type="checkbox" name="" id="">EURUSD 
+        <br>
+        <input type="checkbox" name="" id=""> AUDUSD          
+         <!-- /how to add another checkbox in the same column and the same row/ -->
+    </td>
+        
         <td>R:R</td>
         </tr>
         <tr>
@@ -112,7 +119,7 @@
     const button=document.getElementById("toggle-checklist")
     const checklist=document.querySelector(".right-panel")
     button.addEventListener("click",function(){  
-       if(checklist.style.display==="none"){         #in the checklist go to style and change the display
+       if(checklist.style.display==="none"){         //in the checklist go to style and change the display
        checklist.style.display="block";         
        }
     else{

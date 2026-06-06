@@ -37,7 +37,7 @@ table{
 }
 .trade-history{
     display: flex;
-    gap: 250px;      ### using gaps instead of justifying the space 
+    gap: 10px;      //using gaps instead of justifying the  
     
 }
 .chart-area{
