@@ -87,3 +87,30 @@ table{
 
     align-items:center;
 }
+.rules-followed{
+    display: flex;
+    tab-size: 50px;
+}
+th{
+    width: 120px;
+}
+.da-te{
+    width: 120px;
+}
+.R-R{
+    width:120px;
+}
+set-up{
+    width: 100px;;
+}
+table{       
+    table-layout: fixed; 
+    /* use the widths which i give you instead of calculating automatical */
+}
+input[type="datetime-local"]{
+    width:90%;
+}
+input[type="number"]{  /* select the input which has only has input type=number */
+    width:90%;  
+    /* this means take 90%width of the parent container */
+    }
