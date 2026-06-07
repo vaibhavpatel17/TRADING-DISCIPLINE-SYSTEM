@@ -76,26 +76,53 @@
         </section>
         <section class="right-panel">
         <h2>RIGHT PANEL</h2>
-         <input type="radio"> FVG 
-    </section>
+        <h1>CHECKLIST</h1>
+        <ul id="checklist">
+            <li>
+                <input type="checkbox" name="" id="">FVG
+            </li>
+            <li>
+                <input type="checkbox" name="" id="">HTF confirmation 
+            </li>
+        </ul>
+        
+            <input type="text" id="newrule"> 
+            <!-- no spaces should be used while writing inside ids  -->
+            <button id="addrule">
+                add rule
+            </button>
+             </section>
     </section>
     
-
     <section><h1>TRADE  HISTORY</h1> </section>
-    <section class="trade-history">
-    <section><h1>data</h1></section>
-    <section><h1>pair</h1> </section>
-    <section><h1>setup</h1></section>
-    <section><h1>R:R</h1></section>
-    <section><h1>PnL</h1></section>
-
-</section>
 <table>
     <table border="1">
+    <!-- <section class="trade-history">    we cannot have a section inside the table  -->
         <tr>
-        <td>PAIR</td>
-        <td>RESULTS</td>
-        <td>R:R</td>
+            <th class="da-te">DATE</th>
+            <th class="pa-ir">PAIR</th>
+            <th class="set-up">SETUP</th>
+            <th class="R-R">R:R</th>
+            <th class="P-L">Profit & Loss</th>
+            <th>rules followed</th>
+                </tr>
+
+
+        <tr>
+        <td><input type="datetime-local" name="" id=""></td>
+        <td><input type="checkbox" name="" id="">EURUSD 
+        <br>
+        <input type="checkbox" name="" id="">AUDUSD          
+         <!-- /how to add another checkbox in the same column and the same row/ -->
+    </td>
+    <td><input type="radio">FVG
+    <br>
+<input type="radio">FVG </td>
+<td><input type="number"></td>
+
+
+        
+        
         </tr>
         <tr>
             <td>BTCUSD</td>
@@ -112,17 +139,26 @@
     const button=document.getElementById("toggle-checklist")
     const checklist=document.querySelector(".right-panel")
     button.addEventListener("click",function(){  
-       if(checklist.style.display==="none"){         #in the checklist go to style and change the display
+       if(checklist.style.display==="none"){         //in the checklist go to style and change the display
        checklist.style.display="block";         
        }
     else{
         checklist.style.display="none"
     }
-    
-       
-
+});
+    const addbutton=document.getElementById("addrule");
+    const ruleinput=document.getElementById("newrule");
+    const checklistlist=document.getElementById("checklist");
+    addbutton.addEventListener("click",function(){
+        const newruletext=ruleinput.value;    
+        // takes the value inside the text box and stores inside newruletext
+        const newitem=document.createElement("li")
+        // the above line creates a new list but doesnt yet display the same on the screen cuz we have npt yet attched it to the list 
+        newitem.textContent=newruletext;
+        checklistlist.appendChild(newitem);
 });
 </script>
+
 </body>
 </html>
 
