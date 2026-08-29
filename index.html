@@ -3,12 +3,18 @@
 <head>
     <title> TRADING SYSTEM</title>
     <link rel="stylesheet" href="style.css">
+    
 </head>
 <body>
     <main>
-      <section class="nav-bar">
+      <section class="nav-bar">  
       <section class="sym-bol">
-        <h2>SYMBOL</h2>
+        <h2 id ="symbol-display">SYMBOL</h2>
+        <select id="symbol-input"> <!-- with this select+option dropsdown menu will be just visible thats but it'll not be functional so we need JS .VALUE to ask what did the user actually chose-->
+            <option value="EURUSD">EURUSD</option>
+            <option value="XAUUSD"> XAUUSD</option>
+            <option value="BTCUSD">BTCUSD</option>
+            </select>     
         </section>
         <section class="lo-go">
             <h2>LOGO</h2>
@@ -158,7 +164,7 @@
         checklistlist.appendChild(newitem);
 });
 </script>
-
+<script src="script.js"></script> <!-- tells HTML where the javascrip file is-->
 </body>
 </html>
 
