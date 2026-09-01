@@ -29,3 +29,31 @@ symbolInput.addEventListener("change",function(){
 symbolDisplay.textContent=symbolInput.value;   // simboldisplay is where we want to show the symbol ,, textcontext andre it changes the text inside the HTML element .value gets whatever the user has selected 
 
 })
+const timeFrameDisplay = document.getElementById("timeframe-display");
+
+const timeFrameInputs = document.querySelectorAll('input[name="time-frame"]');
+
+timeFrameInputs.forEach(function(timeFrame) {
+    timeFrame.addEventListener("change", function() {
+        timeFrameDisplay.textContent = timeFrame.value;
+    });     
+});
+
+
+//const==creates a variable whose value cannot be reassigned
+//timeFrameDisplay== is name we chose fro variable
+//"=" means store the value on the right side to the variable on the left
+//document==represents our webpage
+//"." means access something belonging to the document  
+//timeframe-display== it is the exact id we are looking for
+//so the complete line means "find the HTML element whose id is timeframe-display and store it inside the variable called
+// timeFrameDisplay"
+
+//queryselector==go into my HTML and find the element that matches my description(inside the bracket)
+//so the second line says "find all the input elements whose name is time-frame and store it inside the variable"
+
+
+//3rd line
+//timeFrameInput==our variable containing all 5 radio buttons 
+//forEach==go through each element onebyone
+//fucntion(timeFrame)== creates a function that runs for each radio button 
