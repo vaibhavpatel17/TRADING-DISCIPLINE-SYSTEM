@@ -72,11 +72,31 @@ buybutton.addEventListener("click",function(){
     const quantity = Number(quant.value);
     const sellStop=Number(sell.value);
     const takeProfit=Number(tp.value);
+    console.log(sellStop);
+    console.log(takeProfit);
+    console.log(quantity);
+    const riskReward = takeProfit / sellStop;
+    console.log(riskReward);
+    const userSetup={};
+    //usersetup is an empty container with curly braces,if it had double quotes then it wud contain emtry strings 
+    userSetup.maximumRiskReward=2;
+    //usersetup is our tradesetup container
+    //that acts as a container where  we put our parameters for entering the trade
+    //minimumriskreward is the property we are creating 
+    //so the line says that tarder wants atleast 1:2rr
+    console.log(userSetup.maximumRiskReward);
+    if (riskReward>=userSetup.maximumRiskReward){
+        return; // we have return here so that when the buyer clicks BUY button and RR exceeds his initial setup then stop the trade 
+        alert("trade stopped due to inappropriate RR");
+        console.log("trade stopped with exceeding RR");
+        
+    }
+
 
     //variable from "" to "BUY"
     //buybtton is our variable pointing towards our BUYBUTTON
     //classlist is a property that represents the CSS classes currently connected acttached to the HTML element
-    //initially buy jad no classes , but now after this lines is complied JS says that
+    //initially buy had no classes , but now after this lines is complied JS says that
     //this button is buy and i am giving it as class green-buy and apply styling for this 
     //.add tells that add this class to the element
     // so the whole line tells us that take the buybutton and access its class and add the class
@@ -127,4 +147,22 @@ console.log(tp.value);
 tp.addEventListener("input",function(){
     const takeProfit=Number(tp.value)
     console.log(takeProfit);
-})
+});
+const userSetup={};
+const fvgRule=document.getElementById("FVG-rule");
+userSetup.fvgRequired=fvgRule.checked;
+//usersetup is the object we created 
+//fvgreq is a variable like property that means it adds a property called fvg req to usersetup object
+//.checked asks if the box is already ticked 
+//usersetup.fvgrequired means we are creating a property called
+//fvgrequired inside the object usersetup
+console.log(userSetup.fvgRequired);
+const saveSetup=document.getElementById("save-setup");
+console.log(saveSetup);
+saveSetup.addEventListener("click",function(){
+    userSetup.fvgRequired=fvgRule.checked;
+    //we are again adding fvgreq to this to make sure this will be updated 
+    console.log("setup saved");
+    console.log(userSetup);
+
+});
