@@ -1,4 +1,5 @@
-
+let tradeType = ""; //this variable will eventually hold either BUY/SELL
+console.log(tradeType)
 let symbol="XAUUSD";
 symbol="EURUSD";     //THIS SHOWS VALUE CAN BE REASSIGNED USING let
 console.log(symbol);
@@ -17,9 +18,9 @@ const x=document.getElementById("symbol-display")   // now this doesnt mean we c
 symbolDisplay.textContent=symbol;
 function test(){
     console.log("function is working");   
-}
-
+    
 // test means "run the instructions what ever is written inside the test function" but we havent yet told the function to run we have told it just to create
+}
 test(); 
 const symbolInput=document.getElementById("symbol-input")  // this reprsents our dropdown menu
 console.log(symbolInput.value)  // tells javascript to display something on the browser console
@@ -31,10 +32,12 @@ symbolDisplay.textContent=symbolInput.value;   // simboldisplay is where we want
 })
 const timeFrameDisplay = document.getElementById("timeframe-display");
 
-const timeFrameInputs = document.querySelectorAll('input[name="time-frame"]');
+const timeFrameInputs = document.querySelectorAll('input[name="time-frame"]');//TIMEFRAMEINPUT contains 5 different radio inputs  
 
-timeFrameInputs.forEach(function(timeFrame) {
-    timeFrame.addEventListener("change", function() {
+timeFrameInputs.forEach(function(timeFrame) {  //here timeframe is just a temporary variable name 
+    // so the above line says that for every time frame radio button , temporarily call that button and perform following actios
+    timeFrame.addEventListener("change", function() {   //addeventlistener means "wait for something to happen to this element,,basically listen for a change"
+//so the above 2 lines says that go through each timeframe radiobuttons and listen for the user changing.
         timeFrameDisplay.textContent = timeFrame.value;
     });     
 });
@@ -49,7 +52,7 @@ timeFrameInputs.forEach(function(timeFrame) {
 //so the complete line means "find the HTML element whose id is timeframe-display and store it inside the variable called
 // timeFrameDisplay"
 
-//queryselector==go into my HTML and find the element that matches my description(inside the bracket)
+//queryselector==go into my HTML and find the element that matches my description(inside the bracket) it is finding the five radio buttons
 //so the second line says "find all the input elements whose name is time-frame and store it inside the variable"
 
 
@@ -57,3 +60,71 @@ timeFrameInputs.forEach(function(timeFrame) {
 //timeFrameInput==our variable containing all 5 radio buttons 
 //forEach==go through each element onebyone
 //fucntion(timeFrame)== creates a function that runs for each radio button 
+const buybutton=document.getElementById("buy-button");
+const sellbutton=document.getElementById("sell-button");
+buybutton.addEventListener("click",function(){
+    buybutton.classList.add("green-buy");
+    tradeType="BUY";//whenever the buybutton is clicked we are changing our 
+    console.log(tradeType);
+    console.log(quant.value);
+    console.log(sell.value);
+    console.log(tp.value);
+    const quantity = Number(quant.value);
+    const sellStop=Number(sell.value);
+    const takeProfit=Number(tp.value);
+
+    //variable from "" to "BUY"
+    //buybtton is our variable pointing towards our BUYBUTTON
+    //classlist is a property that represents the CSS classes currently connected acttached to the HTML element
+    //initially buy jad no classes , but now after this lines is complied JS says that
+    //this button is buy and i am giving it as class green-buy and apply styling for this 
+    //.add tells that add this class to the element
+    // so the whole line tells us that take the buybutton and access its class and add the class
+    //and then css takes over and does its styling part on its own 
+    sellbutton.classList.remove("red-sell");
+   
+});
+sellbutton.addEventListener("click",function(){
+    
+    buybutton.classList.remove("green-buy");//removes the class from the list
+    // the above line is inside this function cuz if the user clicks sell it shud first deselect the buy
+    sellbutton.classList.add("red-sell");
+    tradeType="SELL";
+    console.log(tradeType);
+    console.log(quant.value);
+    console.log(sell.value);
+    console.log(tp.value);
+    
+
+});
+const quant=document.getElementById("quantity-input");
+console.log(quant.value);
+quant.addEventListener("input",function(){  //input is for typing in the placeholder
+//quant gets the number whatever we type in the placeholder 
+    console.log(quant.value);
+const quantity=Number(quant.value);//the number you type in the quant box store it inside this variable
+console.log(quantity);
+if (quantity>0){
+    console.log("valid quantity")
+    console.log("Trade can proceed");
+}
+else{
+    console.log("invalid quantity")
+    console.log("trade cannot be taken ")
+}
+});
+//QUANTITY.VALUE==INPUT VALUE IS IN THE FORM OF TEXT
+const sell=document.getElementById("sl-input");
+console.log(sell.value)
+
+sell.addEventListener("input",function(){
+    const sellStop=Number(sell.value);
+    console.log(sellStop)
+});
+
+const tp=document.getElementById("tp-input");
+console.log(tp.value);
+tp.addEventListener("input",function(){
+    const takeProfit=Number(tp.value)
+    console.log(takeProfit);
+})
