@@ -10,7 +10,7 @@ console.log(testNumber);   // we cannot reassign the value using const
 let card="BTCUSD";
 console.log(card);
 let symbolDisplay=document.getElementById("symbol-display")
-const x=document.getElementById("symbol-display")   // now this doesnt mean we can never cange the HTML element ,,, we can do it unlike const
+const y=document.getElementById("symbol-display")   // now this doesnt mean we can never cange the HTML element ,,, we can do it unlike const
 // in the above line let symboldisplay is like "we are creating a variable called as symboldisplay"
 //document means the basically the webpage
 //getelemetbyid is a javascript function that means find the html element using its ID
