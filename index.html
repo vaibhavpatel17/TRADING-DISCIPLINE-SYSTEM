@@ -3,25 +3,31 @@
 <head>
     <title> TRADING SYSTEM</title>
     <link rel="stylesheet" href="style.css">
+    
 </head>
 <body>
     <main>
-      <section class="nav-bar">
+      <section class="nav-bar">  
       <section class="sym-bol">
-        <h2>SYMBOL</h2>
+        <h2 id ="symbol-display">SYMBOL</h2>
+        <select id="symbol-input"> <!-- with this select+option dropsdown menu will be just visible thats but it'll not be functional so we need JS .VALUE to ask what did the user actually chose-->
+            <option value="EURUSD">EURUSD</option>
+            <option value="XAUUSD"> XAUUSD</option>
+            <option value="BTCUSD">BTCUSD</option>
+            </select>     
         </section>
         <section class="lo-go">
             <h2>LOGO</h2>
                 </section>
-      <section class="time-frame" >
-        
-           
-     <section class="time-selection">                           
-        <input type="radio" name="" id="">1 min
-         <input type="radio" name="" id="">5 min
-          <input type="radio" name="" id="">15 min
-           <input type="radio" name="" id="">1 hr
-            <input type="radio" name="" id="">4hr
+
+                <section class="time-frame" >     
+     <section class="time-selection">        
+        <h2 id="timeframe-display">TIMEFRAME</h2>                   
+        <input type="radio" name="time-frame" id="" value="1min">1 min
+         <input type="radio" name="time-frame" id="" value="5min">5 min
+          <input type="radio" name="time-frame" id="" value="15min">15 min
+           <input type="radio" name="time-frame" id="" value="1hr">1 hr
+            <input type="radio" name="time-frame" id="" value="4hr">4hr
      </section>
       </section>
       
@@ -30,19 +36,19 @@
         </button>
       </section>
       </section>
-      <br>
+      <brr>
 <section class="separate-list"> 
     <section class="left-panel">
         <h2>LEFT PANEL</h2>
         <section class="buy-sell">
-            <button> BUY </button>
-            <button> SELL </button>
+            <button id="buy-button"> BUY </button>
+            <button id="sell-button"> SELL </button>
             <br>
-            <input type="number"> quantity 
+            <input type="number" id="quantity-input"> quantity 
             <br>
-            <input type="number"> SL
+            <input type="number" id="sl-input"> SL
             <br>
-            <input type="number">TP
+            <input type="number" id="tp-input">TP
         
         </section>
         <section class="trade-intelligience">
@@ -79,18 +85,22 @@
         <h1>CHECKLIST</h1>
         <ul id="checklist">
             <li>
-                <input type="checkbox" name="" id="">FVG
+                <input type="checkbox" name="" id="FVG-rule">FVG
             </li>
             <li>
                 <input type="checkbox" name="" id="">HTF confirmation 
             </li>
+            <li>
+                <input type="number" id="max-rr" step="0.1">MAX R:R
+            </li>
         </ul>
-        
+        <!--JS id's are case sensitive-->
             <input type="text" id="newrule"> 
             <!-- no spaces should be used while writing inside ids  -->
             <button id="addrule">
                 add rule
             </button>
+            <button id="save-setup">SAVE SETUP</button>
              </section>
     </section>
     
@@ -158,7 +168,8 @@
         checklistlist.appendChild(newitem);
 });
 </script>
-
+<script src="script.js"></script> <!-- tells HTML where the javascrip file is-->
 </body>
 </html>
 
+<!--//Light Blue/Cyan (<!DOCTYPE html>, <html>, <body>, etc.): These are HTML tags. They define the structure of the webpage.Green (class, rel, href, type, name, id): These are Attributes. They provide additional information about an HTML tag.Brown/Orange ("nav-bar", "radio", "style.css"): These are Attribute Values. They are the specific settings assigned to attributes, usually wrapped in quotation marks.//-->
