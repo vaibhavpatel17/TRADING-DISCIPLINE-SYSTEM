@@ -77,17 +77,18 @@ buybutton.addEventListener("click",function(){
     console.log(quantity);
     const riskReward = takeProfit / sellStop;
     console.log(riskReward);
-    const userSetup={};
+    //const userSetup={};
     //usersetup is an empty container with curly braces,if it had double quotes then it wud contain emtry strings 
-    userSetup.maximumRiskReward=2;
+    //userSetup.maximumRiskReward=2;
     //usersetup is our tradesetup container
     //that acts as a container where  we put our parameters for entering the trade
     //minimumriskreward is the property we are creating 
     //so the line says that tarder wants atleast 1:2rr
     console.log(userSetup.maximumRiskReward);
-    if (riskReward>=userSetup.maximumRiskReward){
-        return; // we have return here so that when the buyer clicks BUY button and RR exceeds his initial setup then stop the trade 
+    if (riskReward>userSetup.maximumRiskReward){
         alert("trade stopped due to inappropriate RR");
+        return; // we have return here so that when the buyer clicks BUY button and RR exceeds his initial setup then stop the trade 
+        
         console.log("trade stopped with exceeding RR");
         
     }
@@ -157,6 +158,10 @@ userSetup.fvgRequired=fvgRule.checked;
 //usersetup.fvgrequired means we are creating a property called
 //fvgrequired inside the object usersetup
 console.log(userSetup.fvgRequired);
+const maxRR=document.getElementById("max-rr");
+maxRR.addEventListener("click",function(){
+    userSetup.maximumRiskReward=Number(maxRR.value);
+});
 const saveSetup=document.getElementById("save-setup");
 console.log(saveSetup);
 saveSetup.addEventListener("click",function(){
@@ -166,3 +171,33 @@ saveSetup.addEventListener("click",function(){
     console.log(userSetup);
 
 });
+const chart = LightweightCharts.createChart(
+    document.getElementById("chart-area")
+    );
+    console.log(chart);
+    console.log(
+    document.getElementById("chart-area").getBoundingClientRect()
+);
+//const creates a varibake which cannot be reassigned 
+//lightweightchart== it is the library we loaded in html,it contains  charts tools
+//when the library loads it gives javascript an object called lightweightchart
+//createchart is the function provided by the library 
+//it asks the library to create a chart 
+//so the complete firstline means create  chart using library and store it inside the variable called as chart
+
+    console.log(document.getElementById("chart-area"));
+//the above lines say that create a lightweight chart inside the html element who id is chart-area
+const candlestickSeries = chart.addSeries(
+    LightweightCharts.CandlestickSeries
+);
+console.log(
+    document.querySelector(".chart-area").getBoundingClientRect().width
+);
+candlestickSeries.setData([
+    { time: "2026-09-01", open: 100, high: 110, low: 95, close: 105 },
+    { time: "2026-09-02", open: 105, high: 115, low: 100, close: 112 },
+    { time: "2026-09-03", open: 112, high: 120, low: 108, close: 115 },
+    { time: "2026-09-04", open: 115, high: 118, low: 105, close: 108 }
+]);
+console.log(LightweightCharts);
+

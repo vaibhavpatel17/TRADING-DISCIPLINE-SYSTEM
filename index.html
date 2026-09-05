@@ -2,6 +2,7 @@
 <html>
 <head>
     <title> TRADING SYSTEM</title>
+    <script src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
     <link rel="stylesheet" href="style.css">
     
 </head>
@@ -78,7 +79,10 @@
 
 
         <section class="chart-area">
-            <h1>CHART_AREA </h1>
+            <!--<h1>CHART_AREA </h1>  
+            we are not having h1 becoz browser treats chart area as text-->
+        <div id="chart-area" ></div>    
+        
         </section>
         <section class="right-panel">
         <h2>RIGHT PANEL</h2>
@@ -92,6 +96,9 @@
             </li>
             <li>
                 <input type="number" id="max-rr" step="0.1">MAX R:R
+<!--setp controls the size of the increments allowed when changin the number
+setpsize 1 would allow to change the it in whole number wise 
+and setsize 0.1 would allow the traders to change the size in decimal wise-->
             </li>
         </ul>
         <!--JS id's are case sensitive-->
