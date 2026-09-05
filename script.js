@@ -174,30 +174,66 @@ saveSetup.addEventListener("click",function(){
 const chart = LightweightCharts.createChart(
     document.getElementById("chart-area")
     );
-    console.log(chart);
+    //the above line is basically where the chart has to be created 
+    //that is inside the html id "chart-area"
+    console.log(chart);  // this line says that "show me this value inside the browser"
+    //the above line doesnt actually display the chart on the screen it dislays the informaton about the chart in console
     console.log(
     document.getElementById("chart-area").getBoundingClientRect()
-);
+);//the semicolon tells JS that the statement is finished 
 //const creates a varibake which cannot be reassigned 
 //lightweightchart== it is the library we loaded in html,it contains  charts tools
 //when the library loads it gives javascript an object called lightweightchart
 //createchart is the function provided by the library 
 //it asks the library to create a chart 
 //so the complete firstline means create  chart using library and store it inside the variable called as chart
-
+//so the complete above function says that create a chart inside the chart-area and store it insid ethe variable 
+//getboundingclientrect==tell me the actual size of the html element the screen 
     console.log(document.getElementById("chart-area"));
 //the above lines say that create a lightweight chart inside the html element who id is chart-area
 const candlestickSeries = chart.addSeries(
+//add series to my chart and store inside candlesticksseries
     LightweightCharts.CandlestickSeries
+//,addseries() tells what type of series we want...
+//here we want candlestickseries from the the lightweightcharts lib
 );
 console.log(
     document.querySelector(".chart-area").getBoundingClientRect().width
 );
-candlestickSeries.setData([
+//the above line says that "find the element that matche my description in CSS and get me the details"
+//getboundingclientrect.width-- from all the info that getbpundingclientrect gives , give me only width
+
+candlestickSeries.setData([   
+//give the candlesticks we created earlier particular datas
     { time: "2026-09-01", open: 100, high: 110, low: 95, close: 105 },
     { time: "2026-09-02", open: 105, high: 115, low: 100, close: 112 },
     { time: "2026-09-03", open: 112, high: 120, low: 108, close: 115 },
     { time: "2026-09-04", open: 115, high: 118, low: 105, close: 108 }
 ]);
-console.log(LightweightCharts);
 
+// the above is the collection of array []== tis represents the start of the array 
+console.log(LightweightCharts);
+const API_KEY = "2a232785506443ffa782e28fdeabb3e5";
+fetch(`https://api.twelvedata.com/time_series?symbol=EUR/USD&interval=1min&outputsize=5&apikey=${API_KEY}`)
+    .then(response => response.json())
+   .then(data => {
+    const marketData = data;
+    console.log(marketData);
+    const candles = marketData.values;
+    console.log(candles);
+    console.log(candles[0]);
+    console.log(candles[0].datetime);
+    console.log(Number(candles[0].open));
+    console.log(Number(candles[0].high));
+    console.log(Number(candles[0].close));
+    console.log(Number(candles[0].low));
+    const chartData = candles.map(function(candle) {
+        return{
+    time:candle.datetime,
+    open: Number(candle.open),
+    high: Number(candle.high),
+    low: Number(candle.low),
+    close: Number(candle.close)
+};
+   });
+});
