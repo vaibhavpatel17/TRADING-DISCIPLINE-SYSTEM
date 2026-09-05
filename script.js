@@ -214,26 +214,69 @@ candlestickSeries.setData([
 // the above is the collection of array []== tis represents the start of the array 
 console.log(LightweightCharts);
 const API_KEY = "2a232785506443ffa782e28fdeabb3e5";
-fetch(`https://api.twelvedata.com/time_series?symbol=EUR/USD&interval=1min&outputsize=5&apikey=${API_KEY}`)
-    .then(response => response.json())
-   .then(data => {
-    const marketData = data;
+//API key acts as credential that tells twelve data that request is coming from my account
+fetch(`https://api.twelvedata.com/time_series?symbol=EUR/USD&interval=1min&outputsize=100&apikey=${API_KEY}`)
+  //fetch== its is a built in java functions which helps to request data from somehwere
+  //on the internet
+  //the url  is address of the API endpoint we want to communicate with and contains parameters that we require from them 
+  // so the whole line means send a request to that URL and get a response 
+  //everything after the "?" as the instructions we are sending to the API like symbolinterval and no of candles 
+.then(response => response.json())   //the syntax is basically fetch().then()
+// the syntax means send the request and when the response comes back continue with the code
+//response is just a varible we chose for whatever twelve data sends back
+//JSON==javascriptobjectnotation
+//it is the common format for sending data between applications 
+//.json means take the json response that comes from tweledata and turn it into smthg JS can directly work with
+//so the whole line means convert the data into JS and store it in repsonse variable
+//reponse contains whole http data that means Did the request succeed?
+//What status code did we get?
+//What type of data came back?
+.then(data => {               //this data variable contains the parsed json content
+    const marketData = data; //show me the complete marketdata response i got from 12data in the browser console
     console.log(marketData);
+    
+    if(marketData.Status==="error"){
+        console.log(("APIERROR"))
+        return;
+    }
     const candles = marketData.values;
+    
+//the baove line says that go inside marketdata and give me the VALUE stored uder
+//VALUES property
+//so the meaning is stores those 100 candles in CANDLES variable 
     console.log(candles);
-    console.log(candles[0]);
-    console.log(candles[0].datetime);
-    console.log(Number(candles[0].open));
-    console.log(Number(candles[0].high));
+    console.log (candles[0]);
+//only prints the first candle from the candles array 
     console.log(Number(candles[0].close));
+//(.dot) is used to access the property of an object 
+    console.log(candles[0].datetime);
+//it means go to the first candle get me its dataandtime
+    console.log(Number(candles[0].open));
+//number means convert the string output into a js number 
+    console.log(Number(candles[0].high));
     console.log(Number(candles[0].low));
-    const chartData = candles.map(function(candle) {
+   const chartData = candles.reverse().map(function(candle) {
+//reverse the order of candles 
+//12data send newesttooldest we want from oldesttonewest
+//.map==creates a new version of candles and goes through the array and 
+//calls this function once for each candle which is being processed
+
         return{
-    time:candle.datetime,
+    time: Math.floor(new Date(candle.datetime).getTime() / 1000),  
+//new means create a new object,date is a bultin javasc fucntion for creating java date objects 
+//so we are telling JS to create an object that actually holds date related functionality 
+//math.floor removes decimal part and gives us the whole number    
     open: Number(candle.open),
     high: Number(candle.high),
     low: Number(candle.low),
     close: Number(candle.close)
+//CANDLES IS WHOLE ARRAY ,,,CANDLE IS ONE
 };
    });
+   console.log(chartData);
+   console.log(chartData.map(candle => candle.time));
+   console.log("FIRST CANDLE:", chartData[0]);
+   console.log(chartData[0].time, typeof chartData[0].time);
+   //candlestickSeries.setData(chartData);
+   chart.timeScale().fitContent();
 });
