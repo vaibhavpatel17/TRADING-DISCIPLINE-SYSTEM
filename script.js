@@ -42,7 +42,6 @@ timeFrameInputs.forEach(function(timeFrame) {  //here timeframe is just a tempor
     });     
 });
 
-
 //const==creates a variable whose value cannot be reassigned
 //timeFrameDisplay== is name we chose fro variable
 //"=" means store the value on the right side to the variable on the left
@@ -54,7 +53,6 @@ timeFrameInputs.forEach(function(timeFrame) {  //here timeframe is just a tempor
 
 //queryselector==go into my HTML and find the element that matches my description(inside the bracket) it is finding the five radio buttons
 //so the second line says "find all the input elements whose name is time-frame and store it inside the variable"
-
 
 //3rd line
 //timeFrameInput==our variable containing all 5 radio buttons 
@@ -103,7 +101,7 @@ buybutton.addEventListener("click",function(){
     // so the whole line tells us that take the buybutton and access its class and add the class
     //and then css takes over and does its styling part on its own 
     sellbutton.classList.remove("red-sell");
-   
+
 });
 sellbutton.addEventListener("click",function(){
     
@@ -121,7 +119,7 @@ sellbutton.addEventListener("click",function(){
 const quant=document.getElementById("quantity-input");
 console.log(quant.value);
 quant.addEventListener("input",function(){  //input is for typing in the placeholder
-//quant gets the number whatever we type in the placeholder 
+//quant gets the number whatever we type in the quant box 
     console.log(quant.value);
 const quantity=Number(quant.value);//the number you type in the quant box store it inside this variable
 console.log(quantity);
@@ -197,6 +195,25 @@ const candlestickSeries = chart.addSeries(
 //,addseries() tells what type of series we want...
 //here we want candlestickseries from the the lightweightcharts lib
 );
+document.getElementById("chart-area").style.position = "relative";
+function drawFVG(low, high,time) {
+    const zone = document.createElement("div");
+
+    zone.style.position = "absolute";
+    zone.style.left = chart.timeScale().timeToCoordinate(time) + "px";
+    zone.style.right = "0";
+    zone.style.top = candlestickSeries.priceToCoordinate(high) + "px";
+    zone.style.height = (
+        candlestickSeries.priceToCoordinate(low) -
+        candlestickSeries.priceToCoordinate(high)
+    ) + "px";
+
+    zone.style.background = "rgba(255, 0, 0, 0.15)";
+    zone.style.pointerEvents = "none";
+    zone.style.zIndex = "5";
+
+    document.getElementById("chart-area").appendChild(zone);
+}
 console.log(
     document.querySelector(".chart-area").getBoundingClientRect().width
 );
@@ -209,19 +226,38 @@ candlestickSeries.setData([
     { time: "2026-09-02", open: 105, high: 115, low: 100, close: 112 },
     { time: "2026-09-03", open: 112, high: 120, low: 108, close: 115 },
     { time: "2026-09-04", open: 115, high: 118, low: 105, close: 108 }
+
 ]);
 
+
 // the above is the collection of array []== tis represents the start of the array 
-console.log(LightweightCharts);
-const API_KEY = "2a232785506443ffa782e28fdeabb3e5";
+//console.log(LightweightCharts);
+//const candles = [];
+//for (let i = 0; i < 20; i++) {
+        //const open = 1.16 + i * 0.0001;
+        //const high = open + 0.0003;
+        //const low = open - 0.0002;
+        //const close = open + 0.0001;
+        //candles.push({
+            // push means take this new candle and put it at the end of the array
+           // time: i,
+            //open: open,
+            //high: high,
+            //low:low,
+            //close:close,
+//semicolon means add this value under this property name 
+
+       // })
+    //}
+//const API_KEY = "YOUR_API_KEY";
 //API key acts as credential that tells twelve data that request is coming from my account
-fetch(`https://api.twelvedata.com/time_series?symbol=EUR/USD&interval=1min&outputsize=100&apikey=${API_KEY}`)
-  //fetch== its is a built in java functions which helps to request data from somehwere
-  //on the internet
-  //the url  is address of the API endpoint we want to communicate with and contains parameters that we require from them 
-  // so the whole line means send a request to that URL and get a response 
-  //everything after the "?" as the instructions we are sending to the API like symbolinterval and no of candles 
-.then(response => response.json())   //the syntax is basically fetch().then()
+//fetch(`https://api.twelvedata.com/time_series?symbol=EUR/USD&interval=1min&outputsize=100&apikey=${API_KEY}`)
+//fetch== its is a built in java functions which helps to request data from somehwere
+//on the internet
+//the url  is address of the API endpoint we want to communicate with and contains parameters that we require from them 
+// so the whole line means send a request to that URL and get a response 
+//everything after the "?" as the instructions we are sending to the API like symbolinterval and no of candles 
+//.then(response => response.json())   //the syntax is basically fetch().then()
 // the syntax means send the request and when the response comes back continue with the code
 //response is just a varible we chose for whatever twelve data sends back
 //JSON==javascriptobjectnotation
@@ -231,52 +267,170 @@ fetch(`https://api.twelvedata.com/time_series?symbol=EUR/USD&interval=1min&outpu
 //reponse contains whole http data that means Did the request succeed?
 //What status code did we get?
 //What type of data came back?
-.then(data => {               //this data variable contains the parsed json content
-    const marketData = data; //show me the complete marketdata response i got from 12data in the browser console
-    console.log(marketData);
+//.then(data => {               //this data variable contains the parsed json content
+  //  window.marketData = data; //show me the complete marketdata response i got from 12data in the browser console
+    //console.log(JSON.stringify(marketData));
+    //const candles = marketData.values;
     
-    if(marketData.Status==="error"){
-        console.log(("APIERROR"))
-        return;
-    }
-    const candles = marketData.values;
+    //if// (marketData.status==="error") {
+      //  console.log(("APIERROR"))
+        //return;
+    //}
+    
+    //console.log(candles);
+    //console.log(candles.length);
+    
     
 //the baove line says that go inside marketdata and give me the VALUE stored uder
 //VALUES property
 //so the meaning is stores those 100 candles in CANDLES variable 
-    console.log(candles);
-    console.log (candles[0]);
+    //console.log(candles);
+    //console.log (candles[0]);
 //only prints the first candle from the candles array 
-    console.log(Number(candles[0].close));
+    //console.log(Number(candles[0].close));
 //(.dot) is used to access the property of an object 
-    console.log(candles[0].datetime);
+    //console.log(candles[0].datetime);
 //it means go to the first candle get me its dataandtime
-    console.log(Number(candles[0].open));
+    //console.log(Number(candles[0].open));
 //number means convert the string output into a js number 
-    console.log(Number(candles[0].high));
-    console.log(Number(candles[0].low));
-   const chartData = candles.reverse().map(function(candle) {
+    //console.log(Number(candles[0].high));
+    //console.log(Number(candles[0].low));
+//const chartData = candles.reverse().map(function(candle) {
+    //const chartData = candles.map(function(candle) {
+    //.map==creates a new version of candles and goes through the array and 
 //reverse the order of candles 
 //12data send newesttooldest we want from oldesttonewest
-//.map==creates a new version of candles and goes through the array and 
 //calls this function once for each candle which is being processed
 
-        return{
-    time: Math.floor(new Date(candle.datetime).getTime() / 1000),  
+      //      return{
+        //time: Math.floor(new Date(candle.datetime).getTime() / 1000),  
+        //time: candle.time,
 //new means create a new object,date is a bultin javasc fucntion for creating java date objects 
 //so we are telling JS to create an object that actually holds date related functionality 
 //math.floor removes decimal part and gives us the whole number    
-    open: Number(candle.open),
-    high: Number(candle.high),
-    low: Number(candle.low),
-    close: Number(candle.close)
+        //open: Number(candle.open),
+        //high: Number(candle.high),
+        //low: Number(candle.low),
+        //close: Number(candle.close) 
 //CANDLES IS WHOLE ARRAY ,,,CANDLE IS ONE
-};
-   });
-   console.log(chartData);
-   console.log(chartData.map(candle => candle.time));
-   console.log("FIRST CANDLE:", chartData[0]);
-   console.log(chartData[0].time, typeof chartData[0].time);
-   //candlestickSeries.setData(chartData);
-   chart.timeScale().fitContent();
-});
+          //  }
+//});
+
+//this is where we load the real candles from our local candles.json file
+fetch("candles.json")
+    .then(response => response.json())
+    .then(candles => {
+
+        console.log(candles);
+        console.log(candles.length);
+
+        const chartData = candles.reverse().map(function(candle) {
+            return {
+                time: Math.floor(new Date(candle.datetime).getTime() / 1000),
+                open: Number(candle.open),
+                high: Number(candle.high),
+                low: Number(candle.low),
+                close: Number(candle.close)
+            };
+        });
+
+        console.log(chartData);
+        console.log(chartData[0]);
+
+        candlestickSeries.setData(chartData);
+        chart.timeScale().fitContent();
+
+        for (let i = 2; i < chartData.length; i++) {
+//the i starts from 2 cuz we need to have 3 candles 
+    const firstCandle = chartData[i - 2];
+//the above line says that since my i is the third candle go back two positions behind and get the first candle
+    const middleCandle = chartData[i - 1];
+    const thirdCandle = chartData[i];
+    let fvgMitigated = false;
+
+    if (thirdCandle.low > firstCandle.high) {
+//low and high are the properties of the candle object
+        console.log("BULLISH FVG FOUND");
+//this is just a debug message 
+        console.log(firstCandle.high, thirdCandle.low);
+//this prints the two exact prices that had created the gap
+
+        const bullishFVG = {
+            low: firstCandle.high,
+            high: thirdCandle.low,
+            time: thirdCandle.time
+        };
+//bullishFVG is an object it contains the info of low high and time 
+
+        console.log(bullishFVG);
+        drawFVG(bullishFVG.low, bullishFVG.high, bullishFVG.time);
+
+        candlestickSeries.createPriceLine({
+            price: bullishFVG.low,
+//this gives the FVG's lower boundary 
+            lineWidth: 2,
+            lineVisible: true,
+            axisLabelVisible: true,
+            title: "Bullish FVG Low"
+        });
+
+        candlestickSeries.createPriceLine({
+            price: bullishFVG.high,
+//this gives the higher boundary for the FVG 
+            lineWidth: 2,
+            lineVisible: true,
+            axisLabelVisible: true,
+            title: "Bullish FVG High"
+        });
+    }
+
+    if (thirdCandle.high < firstCandle.low) {
+
+        console.log("BEARISH FVG FOUND");
+        console.log(thirdCandle.high, firstCandle.low);
+
+        const bearishFVG = {
+            low: thirdCandle.high,
+            high: firstCandle.low,
+            time: thirdCandle.time
+        };
+
+        console.log(bearishFVG);
+        for (let j = i + 1; j < chartData.length; j++) {
+
+    const futureCandle = chartData[j];
+
+    if (futureCandle.high >= bearishFVG.low) {
+
+        fvgMitigated = true;
+
+        console.log("BEARISH FVG MITIGATED");
+        console.log("Mitigated by candle:", futureCandle);
+
+        break;
+    }
+}
+        drawFVG(bearishFVG.low, bearishFVG.high, bearishFVG.time);
+
+        candlestickSeries.createPriceLine({
+// it is a fucntion provided by lightweight charts that that is responsible for creating a horizontal line at that particular price 
+
+            price: bearishFVG.low,
+//the baove line says that draw the line exactly at the bottom of the fvg
+            lineWidth: 2,
+            lineVisible: true,
+            axisLabelVisible: true,
+            title: "Bearish FVG Low"
+        });
+
+        candlestickSeries.createPriceLine({
+            price: bearishFVG.high,
+            lineWidth: 2,
+            lineVisible: true,
+            axisLabelVisible: true,
+            title: "Bearish FVG High"
+            
+        });
+    }
+}
+    });
