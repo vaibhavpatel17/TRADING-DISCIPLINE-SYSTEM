@@ -317,120 +317,144 @@ candlestickSeries.setData([
 //});
 
 //this is where we load the real candles from our local candles.json file
-//fetch("candles.json")
-//  .then(response => response.json())
-  //  .then(candles => {
 
-    //    console.log(candles);
-      //  console.log(candles.length);
+const selectedTimeFrame =
+    document.querySelector('input[name="time-frame"]:checked')?.value || "1min";
 
-        const chartData = candles.reverse().map(function(candle) {
-            return {
-                time: Math.floor(new Date(candle.datetime).getTime() / 1000),
+const intervalMap = {
+    "1min": "1m",
+    "5min": "5m",
+    "15min": "15m",
+    "1hr": "1h",
+    "4hr": "4h"
+};
+
+const selectedSymbol = symbolInput.value;
+const interval = intervalMap[selectedTimeFrame];
+
+fetch(`https://biquote.io/api/${selectedSymbol}/ohlc?interval=${interval}&limit=100`)
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`API request failed: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (!data.bars || !Array.isArray(data.bars)) {
+            throw new Error("No candle data found in API response");
+        }
+
+        const chartData = data.bars
+            .slice()
+            .sort((a, b) => new Date(a.openTime) - new Date(b.openTime))
+            .map(candle => ({
+                time: Math.floor(new Date(candle.openTime).getTime() / 1000),
                 open: Number(candle.open),
                 high: Number(candle.high),
                 low: Number(candle.low),
-                close: Number(candle.close)
-            };
-        });
+                close: Number(candle.close),
+                isOpen: candle.isOpen
+            }));
 
-        console.log(chartData);
-        console.log(chartData[0]);
+        console.log("Symbol:", selectedSymbol);
+        console.log("Timeframe:", interval);
+        console.log("Candles received:", chartData.length);
 
-        candlestickSeries.setData(chartData);
+        candlestickSeries.setData(
+            chartData.map(({ isOpen, ...candle }) => candle)
+        );
         chart.timeScale().fitContent();
 
-        for (let i = 2; i < chartData.length; i++) {
-//the i starts from 2 cuz we need to have 3 candles 
-    const firstCandle = chartData[i - 2];
-//the above line says that since my i is the third candle go back two positions behind and get the first candle
-    const middleCandle = chartData[i - 1];
-    const thirdCandle = chartData[i];
-    let fvgMitigated = false;
+        // Only use completed candles for FVG detection.
+        const confirmedChartData = chartData.filter(
+            candle => !candle.isOpen
+        );
 
-    if (thirdCandle.low > firstCandle.high) {
-//low and high are the properties of the candle object
-        console.log("BULLISH FVG FOUND");
-//this is just a debug message 
-        console.log(firstCandle.high, thirdCandle.low);
-//this prints the two exact prices that had created the gap
+        for (let i = 2; i < confirmedChartData.length; i++) {
+            const firstCandle = confirmedChartData[i - 2];
+            const middleCandle = confirmedChartData[i - 1];
+            const thirdCandle = confirmedChartData[i];
 
-        const bullishFVG = {
-            low: firstCandle.high,
-            high: thirdCandle.low,
-            time: thirdCandle.time
-        };
-//bullishFVG is an object it contains the info of low high and time 
+            // Bullish FVG
+            if (thirdCandle.low > firstCandle.high) {
+                const bullishFVG = {
+                    low: firstCandle.high,
+                    high: thirdCandle.low,
+                    time: thirdCandle.time
+                };
 
-        console.log(bullishFVG);
-        drawFVG(bullishFVG.low, bullishFVG.high, bullishFVG.time);
+                console.log("BULLISH FVG FOUND", bullishFVG);
+                drawFVG(
+                    bullishFVG.low,
+                    bullishFVG.high,
+                    bullishFVG.time
+                );
 
-        candlestickSeries.createPriceLine({
-            price: bullishFVG.low,
-//this gives the FVG's lower boundary 
-            lineWidth: 2,
-            lineVisible: true,
-            axisLabelVisible: true,
-            title: "Bullish FVG Low"
-        });
+                candlestickSeries.createPriceLine({
+                    price: bullishFVG.low,
+                    lineWidth: 2,
+                    lineVisible: true,
+                    axisLabelVisible: true,
+                    title: "Bullish FVG Low"
+                });
 
-        candlestickSeries.createPriceLine({
-            price: bullishFVG.high,
-//this gives the higher boundary for the FVG 
-            lineWidth: 2,
-            lineVisible: true,
-            axisLabelVisible: true,
-            title: "Bullish FVG High"
-        });
-    }
+                candlestickSeries.createPriceLine({
+                    price: bullishFVG.high,
+                    lineWidth: 2,
+                    lineVisible: true,
+                    axisLabelVisible: true,
+                    title: "Bullish FVG High"
+                });
+            }
 
-    if (thirdCandle.high < firstCandle.low) {
+            // Bearish FVG
+            const bearishFVG = {
+                    low: thirdCandle.high,
+                    if (thirdCandle.high < firstCandle.low) {
+                    high: firstCandle.low,
+                    time: thirdCandle.time
+                };
 
-        console.log("BEARISH FVG FOUND");
-        console.log(thirdCandle.high, firstCandle.low);
+                console.log("BEARISH FVG FOUND", bearishFVG);
 
-        const bearishFVG = {
-            low: thirdCandle.high,
-            high: firstCandle.low,
-            time: thirdCandle.time
-        };
+                let fvgMitigated = false;
 
-        console.log(bearishFVG);
-        for (let j = i + 1; j < chartData.length; j++) {
+                for (let j = i + 1; j < confirmedChartData.length; j++) {
+                    const futureCandle = confirmedChartData[j];
 
-    const futureCandle = chartData[j];
+                    if (futureCandle.high >= bearishFVG.low) {
+                        fvgMitigated = true;
+                        console.log("BEARISH FVG MITIGATED", futureCandle);
+                        break;
+                    }
+                }
 
-    if (futureCandle.high >= bearishFVG.low) {
+                console.log("FVG mitigated:", fvgMitigated);
 
-        fvgMitigated = true;
+                drawFVG(
+                    bearishFVG.low,
+                    bearishFVG.high,
+                    bearishFVG.time
+                );
 
-        console.log("BEARISH FVG MITIGATED");
-        console.log("Mitigated by candle:", futureCandle);
+                candlestickSeries.createPriceLine({
+                    price: bearishFVG.low,
+                    lineWidth: 2,
+                    lineVisible: true,
+                    axisLabelVisible: true,
+                    title: "Bearish FVG Low"
+                });
 
-        break;
-    }
-}
-        drawFVG(bearishFVG.low, bearishFVG.high, bearishFVG.time);
-
-        candlestickSeries.createPriceLine({
-// it is a fucntion provided by lightweight charts that that is responsible for creating a horizontal line at that particular price 
-
-            price: bearishFVG.low,
-//the baove line says that draw the line exactly at the bottom of the fvg
-            lineWidth: 2,
-            lineVisible: true,
-            axisLabelVisible: true,
-            title: "Bearish FVG Low"
-        });
-
-        candlestickSeries.createPriceLine({
-            price: bearishFVG.high,
-            lineWidth: 2,
-            lineVisible: true,
-            axisLabelVisible: true,
-            title: "Bearish FVG High"
-            
-        });
-    }
-}
+                candlestickSeries.createPriceLine({
+                    price: bearishFVG.high,
+                    lineWidth: 2,
+                    lineVisible: true,
+                    axisLabelVisible: true,
+                    title: "Bearish FVG High"
+                });
+            }
+        }
+    })
+    .catch(error => {
+        console.error("Could not load market candles:", error);
     });
