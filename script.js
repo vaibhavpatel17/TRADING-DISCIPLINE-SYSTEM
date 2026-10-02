@@ -24,9 +24,9 @@ function test(){
 test(); 
 const symbolInput=document.getElementById("symbol-input")  // this reprsents our dropdown menu
 console.log(symbolInput.value)  // tells javascript to display something on the browser console
-// .value means it gets the currently selected option from menu
 //so the whole line says that take what ever the user has selected from the dropdown and siplay in the console
 symbolInput.addEventListener("change",function(){
+// .value means it gets the currently selected option from menu
 symbolDisplay.textContent=symbolInput.value;   // simboldisplay is where we want to show the symbol ,, textcontext andre it changes the text inside the HTML element .value gets whatever the user has selected 
 
 })
@@ -317,12 +317,12 @@ candlestickSeries.setData([
 //});
 
 //this is where we load the real candles from our local candles.json file
-fetch("candles.json")
-    .then(response => response.json())
-    .then(candles => {
+//fetch("candles.json")
+//  .then(response => response.json())
+  //  .then(candles => {
 
-        console.log(candles);
-        console.log(candles.length);
+    //    console.log(candles);
+      //  console.log(candles.length);
 
         const chartData = candles.reverse().map(function(candle) {
             return {
