@@ -242,6 +242,7 @@ console.log("Chart area:", document.getElementById("chart-area"));
     document.getElementById("chart-area").appendChild(zone);
 }
 
+
     
     console.log(
         document.querySelector(".chart-area").getBoundingClientRect().width
