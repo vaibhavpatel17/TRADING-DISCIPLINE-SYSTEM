@@ -1,460 +1,468 @@
-let tradeType = ""; //this variable will eventually hold either BUY/SELL
-console.log(tradeType)
-let symbol="XAUUSD";
-symbol="EURUSD";     //THIS SHOWS VALUE CAN BE REASSIGNED USING let
-console.log(symbol);
+    let tradeType = ""; //this variable will eventually hold either BUY/SELL
+    console.log(tradeType)
+    let symbol="XAUUSD";
+    symbol="EURUSD";     //THIS SHOWS VALUE CAN BE REASSIGNED USING let
+    console.log(symbol);
 
-const testNumber=10;
-console.log(testNumber);   // we cannot reassign the value using const
+    const testNumber=10;
+    console.log(testNumber);   // we cannot reassign the value using const
 
-let card="BTCUSD";
-console.log(card);
-let symbolDisplay=document.getElementById("symbol-display")
-const y=document.getElementById("symbol-display")   // now this doesnt mean we can never cange the HTML element ,,, we can do it unlike const
-// in the above line let symboldisplay is like "we are creating a variable called as symboldisplay"
-//document means the basically the webpage
-//getelemetbyid is a javascript function that means find the html element using its ID
-// so the lines means" hey broswer find me the html element whose id is ---- and stre it inside a variabl;e called symboldisplay
-symbolDisplay.textContent=symbol;
-function test(){
-    console.log("function is working");   
-    
-// test means "run the instructions what ever is written inside the test function" but we havent yet told the function to run we have told it just to create
-}
-test(); 
-const symbolInput=document.getElementById("symbol-input")  // this reprsents our dropdown menu
-console.log(symbolInput.value)  // tells javascript to display something on the browser console
-//so the whole line says that take what ever the user has selected from the dropdown and siplay in the console
-symbolInput.addEventListener("change",function(){
-// .value means it gets the currently selected option from menu
-symbolDisplay.textContent=symbolInput.value;   // simboldisplay is where we want to show the symbol ,, textcontext andre it changes the text inside the HTML element .value gets whatever the user has selected 
-
-})
-const timeFrameDisplay = document.getElementById("timeframe-display");
-
-const timeFrameInputs = document.querySelectorAll('input[name="time-frame"]');//TIMEFRAMEINPUT contains 5 different radio inputs  
-
-timeFrameInputs.forEach(function(timeFrame) {  //here timeframe is just a temporary variable name 
-    // so the above line says that for every time frame radio button , temporarily call that button and perform following actios
-    timeFrame.addEventListener("change", function() {   //addeventlistener means "wait for something to happen to this element,,basically listen for a change"
-//so the above 2 lines says that go through each timeframe radiobuttons and listen for the user changing.
-        timeFrameDisplay.textContent = timeFrame.value;
-    });     
-});
-
-//const==creates a variable whose value cannot be reassigned
-//timeFrameDisplay== is name we chose fro variable
-//"=" means store the value on the right side to the variable on the left
-//document==represents our webpage
-//"." means access something belonging to the document  
-//timeframe-display== it is the exact id we are looking for
-//so the complete line means "find the HTML element whose id is timeframe-display and store it inside the variable called
-// timeFrameDisplay"
-
-//queryselector==go into my HTML and find the element that matches my description(inside the bracket) it is finding the five radio buttons
-//so the second line says "find all the input elements whose name is time-frame and store it inside the variable"
-
-//3rd line
-//timeFrameInput==our variable containing all 5 radio buttons 
-//forEach==go through each element onebyone
-//fucntion(timeFrame)== creates a function that runs for each radio button 
-const buybutton=document.getElementById("buy-button");
-const sellbutton=document.getElementById("sell-button");
-buybutton.addEventListener("click",function(){
-    buybutton.classList.add("green-buy");
-    tradeType="BUY";//whenever the buybutton is clicked we are changing our 
-    console.log(tradeType);
-    console.log(quant.value);
-    console.log(sell.value);
-    console.log(tp.value);
-    const quantity = Number(quant.value);
-    const sellStop=Number(sell.value);
-    const takeProfit=Number(tp.value);
-    console.log(sellStop);
-    console.log(takeProfit);
-    console.log(quantity);
-    const riskReward = takeProfit / sellStop;
-    console.log(riskReward);
-    //const userSetup={};
-    //usersetup is an empty container with curly braces,if it had double quotes then it wud contain emtry strings 
-    //userSetup.maximumRiskReward=2;
-    //usersetup is our tradesetup container
-    //that acts as a container where  we put our parameters for entering the trade
-    //minimumriskreward is the property we are creating 
-    //so the line says that tarder wants atleast 1:2rr
-    console.log(userSetup.maximumRiskReward);
-    if (riskReward>userSetup.maximumRiskReward){
-        alert("trade stopped due to inappropriate RR");
-        return; // we have return here so that when the buyer clicks BUY button and RR exceeds his initial setup then stop the trade 
+    let card="BTCUSD";
+    console.log(card);
+    let symbolDisplay=document.getElementById("symbol-display")
+    const y=document.getElementById("symbol-display")   // now this doesnt mean we can never cange the HTML element ,,, we can do it unlike const
+    // in the above line let symboldisplay is like "we are creating a variable called as symboldisplay"
+    //document means the basically the webpage
+    //getelemetbyid is a javascript function that means find the html element using its ID
+    // so the lines means" hey broswer find me the html element whose id is ---- and stre it inside a variabl;e called symboldisplay
+    symbolDisplay.textContent=symbol;
+    function test(){
+        console.log("function is working");   
         
-        console.log("trade stopped with exceeding RR");
-        
+    // test means "run the instructions what ever is written inside the test function" but we havent yet told the function to run we have told it just to create
     }
+    test(); 
+    const symbolInput=document.getElementById("symbol-input")  // this reprsents our dropdown menu
+    console.log(symbolInput.value)  // tells javascript to display something on the browser console
+    //so the whole line says that take what ever the user has selected from the dropdown and siplay in the console
+    symbolInput.addEventListener("change",function(){
+    // .value means it gets the currently selected option from menu
+    symbolDisplay.textContent=symbolInput.value;   // simboldisplay is where we want to show the symbol ,, textcontext andre it changes the text inside the HTML element .value gets whatever the user has selected 
+
+    })
+    const timeFrameDisplay = document.getElementById("timeframe-display");
+
+    const timeFrameInputs = document.querySelectorAll('input[name="time-frame"]');//TIMEFRAMEINPUT contains 5 different radio inputs  
+
+    timeFrameInputs.forEach(function(timeFrame) {  //here timeframe is just a temporary variable name 
+        // so the above line says that for every time frame radio button , temporarily call that button and perform following actios
+        timeFrame.addEventListener("change", function() {   //addeventlistener means "wait for something to happen to this element,,basically listen for a change"
+    //so the above 2 lines says that go through each timeframe radiobuttons and listen for the user changing.
+            timeFrameDisplay.textContent = timeFrame.value;
+        });     
+    });
+
+    //const==creates a variable whose value cannot be reassigned
+    //timeFrameDisplay== is name we chose fro variable
+    //"=" means store the value on the right side to the variable on the left
+    //document==represents our webpage
+    //"." means access something belonging to the document  
+    //timeframe-display== it is the exact id we are looking for
+    //so the complete line means "find the HTML element whose id is timeframe-display and store it inside the variable called
+    // timeFrameDisplay"
+
+    //queryselector==go into my HTML and find the element that matches my description(inside the bracket) it is finding the five radio buttons
+    //so the second line says "find all the input elements whose name is time-frame and store it inside the variable"
+
+    //3rd line
+    //timeFrameInput==our variable containing all 5 radio buttons 
+    //forEach==go through each element onebyone
+    //fucntion(timeFrame)== creates a function that runs for each radio button 
+    const buybutton=document.getElementById("buy-button");
+    const sellbutton=document.getElementById("sell-button");
+    buybutton.addEventListener("click",function(){
+        const hasFVG = checkFVG();
+console.log("FVG present:", hasFVG);
+        
+if (userSetup.fvgRequired && !hasFVG) {
+    alert("Trade stopped: FVG is required, but no FVG was found.");
+    return;
+}
+
+        buybutton.classList.add("green-buy");
+        tradeType="BUY";//whenever the buybutton is clicked we are changing our 
+        console.log(tradeType);
+        console.log(quant.value);
+        console.log(sell.value);
+        console.log(tp.value);
+        const quantity = Number(quant.value);
+        const sellStop=Number(sell.value);
+        const takeProfit=Number(tp.value);
+        console.log(sellStop);
+        console.log(takeProfit);
+        console.log(quantity);
+        const riskReward = takeProfit / sellStop;
+        console.log(riskReward);
+        //const userSetup={};
+        //usersetup is an empty container with curly braces,if it had double quotes then it wud contain emtry strings 
+        //userSetup.maximumRiskReward=2;
+        //usersetup is our tradesetup container
+        //that acts as a container where  we put our parameters for entering the trade
+        //minimumriskreward is the property we are creating 
+        //so the line says that tarder wants atleast 1:2rr
+        console.log(userSetup.maximumRiskReward);
+        if (riskReward>userSetup.maximumRiskReward){
+            alert("trade stopped due to inappropriate RR");
+            return; // we have return here so that when the buyer clicks BUY button and RR exceeds his initial setup then stop the trade 
+            
+            console.log("trade stopped with exceeding RR");
+            
+        }
 
 
-    //variable from "" to "BUY"
-    //buybtton is our variable pointing towards our BUYBUTTON
-    //classlist is a property that represents the CSS classes currently connected acttached to the HTML element
-    //initially buy had no classes , but now after this lines is complied JS says that
-    //this button is buy and i am giving it as class green-buy and apply styling for this 
-    //.add tells that add this class to the element
-    // so the whole line tells us that take the buybutton and access its class and add the class
-    //and then css takes over and does its styling part on its own 
-    sellbutton.classList.remove("red-sell");
+        //variable from "" to "BUY"
+        //buybtton is our variable pointing towards our BUYBUTTON
+        //classlist is a property that represents the CSS classes currently connected acttached to the HTML element
+        //initially buy had no classes , but now after this lines is complied JS says that
+        //this button is buy and i am giving it as class green-buy and apply styling for this 
+        //.add tells that add this class to the element
+        // so the whole line tells us that take the buybutton and access its class and add the class
+        //and then css takes over and does its styling part on its own 
+        sellbutton.classList.remove("red-sell");
 
-});
-sellbutton.addEventListener("click",function(){
-    
-    buybutton.classList.remove("green-buy");//removes the class from the list
-    // the above line is inside this function cuz if the user clicks sell it shud first deselect the buy
-    sellbutton.classList.add("red-sell");
-    tradeType="SELL";
-    console.log(tradeType);
+    });
+    sellbutton.addEventListener("click",function(){
+        const hasFVG = checkFVG();
+        
+if (userSetup.fvgRequired && !hasFVG) {
+    alert("Trade stopped: FVG is required, but no FVG was found.");
+    return;
+}
+
+console.log("FVG present:", hasFVG);
+        
+        buybutton.classList.remove("green-buy");//removes the class from the list
+        // the above line is inside this function cuz if the user clicks sell it shud first deselect the buy
+        sellbutton.classList.add("red-sell");
+        tradeType="SELL";
+        console.log(tradeType);
+        console.log(quant.value);
+        console.log(sell.value);
+        console.log(tp.value);
+        
+
+    });
+    const quant=document.getElementById("quantity-input");
     console.log(quant.value);
-    console.log(sell.value);
+    quant.addEventListener("input",function(){  //input is for typing in the placeholder
+    //quant gets the number whatever we type in the quant box 
+        console.log(quant.value);
+    const quantity=Number(quant.value);//the number you type in the quant box store it inside this variable
+    console.log(quantity);
+    if (quantity>0){
+        console.log("valid quantity")
+        console.log("Trade can proceed");
+    }
+    else{
+        console.log("invalid quantity")
+        console.log("trade cannot be taken ")
+    }
+    });
+    //QUANTITY.VALUE==INPUT VALUE IS IN THE FORM OF TEXT
+    const sell=document.getElementById("sl-input");
+    console.log(sell.value)
+
+    sell.addEventListener("input",function(){
+        const sellStop=Number(sell.value);
+        console.log(sellStop)
+    });
+
+    const tp=document.getElementById("tp-input");
     console.log(tp.value);
-    
-
-});
-const quant=document.getElementById("quantity-input");
-console.log(quant.value);
-quant.addEventListener("input",function(){  //input is for typing in the placeholder
-//quant gets the number whatever we type in the quant box 
-    console.log(quant.value);
-const quantity=Number(quant.value);//the number you type in the quant box store it inside this variable
-console.log(quantity);
-if (quantity>0){
-    console.log("valid quantity")
-    console.log("Trade can proceed");
-}
-else{
-    console.log("invalid quantity")
-    console.log("trade cannot be taken ")
-}
-});
-//QUANTITY.VALUE==INPUT VALUE IS IN THE FORM OF TEXT
-const sell=document.getElementById("sl-input");
-console.log(sell.value)
-
-sell.addEventListener("input",function(){
-    const sellStop=Number(sell.value);
-    console.log(sellStop)
-});
-
-const tp=document.getElementById("tp-input");
-console.log(tp.value);
-tp.addEventListener("input",function(){
-    const takeProfit=Number(tp.value)
-    console.log(takeProfit);
-});
-const userSetup={};
-const fvgRule=document.getElementById("FVG-rule");
-userSetup.fvgRequired=fvgRule.checked;
-//usersetup is the object we created 
-//fvgreq is a variable like property that means it adds a property called fvg req to usersetup object
-//.checked asks if the box is already ticked 
-//usersetup.fvgrequired means we are creating a property called
-//fvgrequired inside the object usersetup
-console.log(userSetup.fvgRequired);
-const maxRR=document.getElementById("max-rr");
-maxRR.addEventListener("click",function(){
-    userSetup.maximumRiskReward=Number(maxRR.value);
-});
-const saveSetup=document.getElementById("save-setup");
-console.log(saveSetup);
-saveSetup.addEventListener("click",function(){
+    tp.addEventListener("input",function(){
+        const takeProfit=Number(tp.value)
+        console.log(takeProfit);
+    });
+    const userSetup={};
+    const fvgRule=document.getElementById("FVG-rule");
     userSetup.fvgRequired=fvgRule.checked;
-    //we are again adding fvgreq to this to make sure this will be updated 
-    console.log("setup saved");
-    console.log(userSetup);
+    //usersetup is the object we created 
+    //fvgreq is a variable like property that means it adds a property called fvg req to usersetup object
+    //.checked asks if the box is already ticked 
+    //usersetup.fvgrequired means we are creating a property called
+    //fvgrequired inside the object usersetup
+    console.log(userSetup.fvgRequired);
+    const maxRR=document.getElementById("max-rr");
+    maxRR.addEventListener("click",function(){
+        userSetup.maximumRiskReward=Number(maxRR.value);
+    });
+    const saveSetup=document.getElementById("save-setup");
+    console.log(saveSetup);
+    saveSetup.addEventListener("click",function(){
+        userSetup.fvgRequired=fvgRule.checked;
+        //we are again adding fvgreq to this to make sure this will be updated 
+        console.log("setup saved");
+        console.log(userSetup);
 
-});
-const chart = LightweightCharts.createChart(
-    document.getElementById("chart-area")
+    });
+    const chart = LightweightCharts.createChart(
+        document.getElementById("chart-area")
+        );
+        //the above line is basically where the chart has to be created 
+        //that is inside the html id "chart-area"
+        console.log(chart);  // this line says that "show me this value inside the browser"
+        //the above line doesnt actually display the chart on the screen it dislays the informaton about the chart in console
+        console.log(
+        document.getElementById("chart-area").getBoundingClientRect()
+    );//the semicolon tells JS that the statement is finished 
+    //const creates a varibake which cannot be reassigned 
+    //lightweightchart== it is the library we loaded in html,it contains  charts tools
+    //when the library loads it gives javascript an object called lightweightchart
+    //createchart is the function provided by the library 
+    //it asks the library to create a chart 
+    //so the complete firstline means create  chart using library and store it inside the variable called as chart
+    //so the complete above function says that create a chart inside the chart-area and store it insid ethe variable 
+    //getboundingclientrect==tell me the actual size of the html element the screen 
+        console.log(document.getElementById("chart-area"));
+    //the above lines say that create a lightweight chart inside the html element who id is chart-area
+    const candlestickSeries = chart.addSeries(
+    //add series to my chart and store inside candlesticksseries
+        LightweightCharts.CandlestickSeries
+    //,addseries() tells what type of series we want...
+    //here we want candlestickseries from the the lightweightcharts lib
     );
-    //the above line is basically where the chart has to be created 
-    //that is inside the html id "chart-area"
-    console.log(chart);  // this line says that "show me this value inside the browser"
-    //the above line doesnt actually display the chart on the screen it dislays the informaton about the chart in console
-    console.log(
-    document.getElementById("chart-area").getBoundingClientRect()
-);//the semicolon tells JS that the statement is finished 
-//const creates a varibake which cannot be reassigned 
-//lightweightchart== it is the library we loaded in html,it contains  charts tools
-//when the library loads it gives javascript an object called lightweightchart
-//createchart is the function provided by the library 
-//it asks the library to create a chart 
-//so the complete firstline means create  chart using library and store it inside the variable called as chart
-//so the complete above function says that create a chart inside the chart-area and store it insid ethe variable 
-//getboundingclientrect==tell me the actual size of the html element the screen 
-    console.log(document.getElementById("chart-area"));
-//the above lines say that create a lightweight chart inside the html element who id is chart-area
-const candlestickSeries = chart.addSeries(
-//add series to my chart and store inside candlesticksseries
-    LightweightCharts.CandlestickSeries
-//,addseries() tells what type of series we want...
-//here we want candlestickseries from the the lightweightcharts lib
-);
-document.getElementById("chart-area").style.position = "relative";
-function drawFVG(low, high,time) {
+    document.getElementById("chart-area").style.position = "relative";
+   
+        
+function drawFVG(low, high, time, color) {
     const zone = document.createElement("div");
 
+    zone.className = "fvg-zone";
     zone.style.position = "absolute";
-    zone.style.left = chart.timeScale().timeToCoordinate(time) + "px";
-    zone.style.right = "0";
-    zone.style.top = candlestickSeries.priceToCoordinate(high) + "px";
-    zone.style.height = (
-        candlestickSeries.priceToCoordinate(low) -
-        candlestickSeries.priceToCoordinate(high)
-    ) + "px";
 
-    zone.style.background = "rgba(255, 0, 0, 0.15)";
+    const x = chart.timeScale().timeToCoordinate(time);
+    const yHigh = candlestickSeries.priceToCoordinate(high);
+    const yLow = candlestickSeries.priceToCoordinate(low);
+
+       if (x === null || yHigh === null || yLow === null) {
+        console.log("FVG not drawn, a coordinate was null:", { x, yHigh, yLow });
+        return;
+    }
+
+    zone.style.left = x + "px";
+    zone.style.right = "0";
+    zone.style.top = Math.min(yHigh, yLow) + "px";
+    zone.style.height = Math.abs(yLow - yHigh) + "px";
+    zone.style.background = color;
+    zone.style.border = "1px solid " + color;
     zone.style.pointerEvents = "none";
     zone.style.zIndex = "5";
-
+console.log("FVG element:", zone);
+console.log("Chart area:", document.getElementById("chart-area"));
     document.getElementById("chart-area").appendChild(zone);
 }
-console.log(
-    document.querySelector(".chart-area").getBoundingClientRect().width
-);
-//the above line says that "find the element that matche my description in CSS and get me the details"
-//getboundingclientrect.width-- from all the info that getbpundingclientrect gives , give me only width
 
-candlestickSeries.setData([   
-//give the candlesticks we created earlier particular datas
-    { time: "2026-09-01", open: 100, high: 110, low: 95, close: 105 },
-    { time: "2026-09-02", open: 105, high: 115, low: 100, close: 112 },
-    { time: "2026-09-03", open: 112, high: 120, low: 108, close: 115 },
-    { time: "2026-09-04", open: 115, high: 118, low: 105, close: 108 }
-
-]);
-
-
-// the above is the collection of array []== tis represents the start of the array 
-//console.log(LightweightCharts);
-//const candles = [];
-//for (let i = 0; i < 20; i++) {
-        //const open = 1.16 + i * 0.0001;
-        //const high = open + 0.0003;
-        //const low = open - 0.0002;
-        //const close = open + 0.0001;
-        //candles.push({
-            // push means take this new candle and put it at the end of the array
-           // time: i,
-            //open: open,
-            //high: high,
-            //low:low,
-            //close:close,
-//semicolon means add this value under this property name 
-
-       // })
-    //}
-//const API_KEY = "YOUR_API_KEY";
-//API key acts as credential that tells twelve data that request is coming from my account
-//fetch(`https://api.twelvedata.com/time_series?symbol=EUR/USD&interval=1min&outputsize=100&apikey=${API_KEY}`)
-//fetch== its is a built in java functions which helps to request data from somehwere
-//on the internet
-//the url  is address of the API endpoint we want to communicate with and contains parameters that we require from them 
-// so the whole line means send a request to that URL and get a response 
-//everything after the "?" as the instructions we are sending to the API like symbolinterval and no of candles 
-//.then(response => response.json())   //the syntax is basically fetch().then()
-// the syntax means send the request and when the response comes back continue with the code
-//response is just a varible we chose for whatever twelve data sends back
-//JSON==javascriptobjectnotation
-//it is the common format for sending data between applications 
-//.json means take the json response that comes from tweledata and turn it into smthg JS can directly work with
-//so the whole line means convert the data into JS and store it in repsonse variable
-//reponse contains whole http data that means Did the request succeed?
-//What status code did we get?
-//What type of data came back?
-//.then(data => {               //this data variable contains the parsed json content
-  //  window.marketData = data; //show me the complete marketdata response i got from 12data in the browser console
-    //console.log(JSON.stringify(marketData));
-    //const candles = marketData.values;
     
-    //if// (marketData.status==="error") {
-      //  console.log(("APIERROR"))
-        //return;
-    //}
-    
-    //console.log(candles);
-    //console.log(candles.length);
-    
-    
-//the baove line says that go inside marketdata and give me the VALUE stored uder
-//VALUES property
-//so the meaning is stores those 100 candles in CANDLES variable 
-    //console.log(candles);
-    //console.log (candles[0]);
-//only prints the first candle from the candles array 
-    //console.log(Number(candles[0].close));
-//(.dot) is used to access the property of an object 
-    //console.log(candles[0].datetime);
-//it means go to the first candle get me its dataandtime
-    //console.log(Number(candles[0].open));
-//number means convert the string output into a js number 
-    //console.log(Number(candles[0].high));
-    //console.log(Number(candles[0].low));
-//const chartData = candles.reverse().map(function(candle) {
-    //const chartData = candles.map(function(candle) {
-    //.map==creates a new version of candles and goes through the array and 
-//reverse the order of candles 
-//12data send newesttooldest we want from oldesttonewest
-//calls this function once for each candle which is being processed
+    console.log(
+        document.querySelector(".chart-area").getBoundingClientRect().width
+    );
+    //the above line says that "find the element that matche my description in CSS and get me the details"
+    //getboundingclientrect.width-- from all the info that getbpundingclientrect gives , give me only width
 
-      //      return{
-        //time: Math.floor(new Date(candle.datetime).getTime() / 1000),  
-        //time: candle.time,
-//new means create a new object,date is a bultin javasc fucntion for creating java date objects 
-//so we are telling JS to create an object that actually holds date related functionality 
-//math.floor removes decimal part and gives us the whole number    
-        //open: Number(candle.open),
-        //high: Number(candle.high),
-        //low: Number(candle.low),
-        //close: Number(candle.close) 
-//CANDLES IS WHOLE ARRAY ,,,CANDLE IS ONE
-          //  }
-//});
+    candlestickSeries.setData([   
+    //give the candlesticks we created earlier particular datas
+        { time: "2026-09-01", open: 100, high: 110, low: 95, close: 105 },
+        { time: "2026-09-02", open: 105, high: 115, low: 100, close: 112 },
+        { time: "2026-09-03", open: 112, high: 120, low: 108, close: 115 },
+        { time: "2026-09-04", open: 115, high: 118, low: 105, close: 108 }
 
-//this is where we load the real candles from our local candles.json file
+    ]);
 
-const selectedTimeFrame =
-    document.querySelector('input[name="time-frame"]:checked')?.value || "1min";
 
-const intervalMap = {
-    "1min": "1m",
-    "5min": "5m",
-    "15min": "15m",
-    "1hr": "1h",
-    "4hr": "4h"
-};
+    // the above is the collection of array []== tis represents the start of the array 
+    //console.log(LightweightCharts);
+    //const candles = [];
+    //for (let i = 0; i < 20; i++) {
+            //const open = 1.16 + i * 0.0001;
+            //const high = open + 0.0003;
+            //const low = open - 0.0002;
+            //const close = open + 0.0001;
+            //candles.push({
+                // push means take this new candle and put it at the end of the array
+            // time: i,
+                //open: open,
+                //high: high,
+                //low:low,
+                //close:close,
+    //semicolon means add this value under this property name 
 
-const selectedSymbol = symbolInput.value;
-const interval = intervalMap[selectedTimeFrame];
+        // })
+        //}
+    //const API_KEY = "YOUR_API_KEY";
+    //API key acts as credential that tells twelve data that request is coming from my account
+    //fetch(`https://api.twelvedata.com/time_series?symbol=EUR/USD&interval=1min&outputsize=100&apikey=${API_KEY}`)
+    //fetch== its is a built in java functions which helps to request data from somehwere
+    //on the internet
+    //the url  is address of the API endpoint we want to communicate with and contains parameters that we require from them 
+    // so the whole line means send a request to that URL and get a response 
+    //everything after the "?" as the instructions we are sending to the API like symbolinterval and no of candles 
+    //.then(response => response.json())   //the syntax is basically fetch().then()
+    // the syntax means send the request and when the response comes back continue with the code
+    //response is just a varible we chose for whatever twelve data sends back
+    //JSON==javascriptobjectnotation
+    //it is the common format for sending data between applications 
+    //.json means take the json response that comes from tweledata and turn it into smthg JS can directly work with
+    //so the whole line means convert the data into JS and store it in repsonse variable
+    //reponse contains whole http data that means Did the request succeed?
+    //What status code did we get?
+    //What type of data came back?
+    //.then(data => {               //this data variable contains the parsed json content
+    //  window.marketData = data; //show me the complete marketdata response i got from 12data in the browser console
+        //console.log(JSON.stringify(marketData));
+        //const candles = marketData.values;
+        
+        //if// (marketData.status==="error") {
+        //  console.log(("APIERROR"))
+            //return;
+        //}
+        
+        //console.log(candles);
+        //console.log(candles.length);
+        
+        
+    //the baove line says that go inside marketdata and give me the VALUE stored uder
+    //VALUES property
+    //so the meaning is stores those 100 candles in CANDLES variable 
+        //console.log(candles);
+        //console.log (candles[0]);
+    //only prints the first candle from the candles array 
+        //console.log(Number(candles[0].close));
+    //(.dot) is used to access the property of an object 
+        //console.log(candles[0].datetime);
+    //it means go to the first candle get me its dataandtime
+        //console.log(Number(candles[0].open));
+    //number means convert the string output into a js number 
+        //console.log(Number(candles[0].high));
+        //console.log(Number(candles[0].low));
+    //const chartData = candles.reverse().map(function(candle) {
+        //const chartData = candles.map(function(candle) {
+        //.map==creates a new version of candles and goes through the array and 
+    //reverse the order of candles 
+    //12data send newesttooldest we want from oldesttonewest
+    //calls this function once for each candle which is being processed
 
-fetch(`https://biquote.io/api/${selectedSymbol}/ohlc?interval=${interval}&limit=100`)
-    .then(response => {
-        if (!response.ok) {
-            throw new Error(`API request failed: ${response.status}`);
-        }
-        return response.json();
-    })
-    .then(data => {
-        if (!data.bars || !Array.isArray(data.bars)) {
-            throw new Error("No candle data found in API response");
-        }
+        //      return{
+            //time: Math.floor(new Date(candle.datetime).getTime() / 1000),  
+            //time: candle.time,
+    //new means create a new object,date is a bultin javasc fucntion for creating java date objects 
+    //so we are telling JS to create an object that actually holds date related functionality 
+    //math.floor removes decimal part and gives us the whole number    
+            //open: Number(candle.open),
+            //high: Number(candle.high),
+            //low: Number(candle.low),
+            //close: Number(candle.close) 
+    //CANDLES IS WHOLE ARRAY ,,,CANDLE IS ONE
+            //  }
+    //});
 
-        const chartData = data.bars
-            .slice()
-            .sort((a, b) => new Date(a.openTime) - new Date(b.openTime))
-            .map(candle => ({
-                time: Math.floor(new Date(candle.openTime).getTime() / 1000),
-                open: Number(candle.open),
-                high: Number(candle.high),
-                low: Number(candle.low),
-                close: Number(candle.close),
-                isOpen: candle.isOpen
-            }));
+    //this is where we load the real candles from our local candles.json file
 
-        console.log("Symbol:", selectedSymbol);
-        console.log("Timeframe:", interval);
-        console.log("Candles received:", chartData.length);
+    const selectedTimeFrame =
+        document.querySelector('input[name="time-frame"]:checked')?.value || "1min";
 
-        candlestickSeries.setData(
-            chartData.map(({ isOpen, ...candle }) => candle)
-        );
-        chart.timeScale().fitContent();
+    const intervalMap = {
+        "1min": "1m",
+        "5min": "5m",
+        "15min": "15m",
+        "1hr": "1h",
+        "4hr": "4h"
+    };
 
-        // Only use completed candles for FVG detection.
-        const confirmedChartData = chartData.filter(
-            candle => !candle.isOpen
-        );
+    const selectedSymbol = symbolInput.value;
+    const interval = intervalMap[selectedTimeFrame];
 
-        for (let i = 2; i < confirmedChartData.length; i++) {
-            const firstCandle = confirmedChartData[i - 2];
-            const middleCandle = confirmedChartData[i - 1];
-            const thirdCandle = confirmedChartData[i];
-
-            // Bullish FVG
-            if (thirdCandle.low > firstCandle.high) {
-                const bullishFVG = {
-                    low: firstCandle.high,
-                    high: thirdCandle.low,
-                    time: thirdCandle.time
-                };
-
-                console.log("BULLISH FVG FOUND", bullishFVG);
-                drawFVG(
-                    bullishFVG.low,
-                    bullishFVG.high,
-                    bullishFVG.time
-                );
-
-                candlestickSeries.createPriceLine({
-                    price: bullishFVG.low,
-                    lineWidth: 2,
-                    lineVisible: true,
-                    axisLabelVisible: true,
-                    title: "Bullish FVG Low"
-                });
-
-                candlestickSeries.createPriceLine({
-                    price: bullishFVG.high,
-                    lineWidth: 2,
-                    lineVisible: true,
-                    axisLabelVisible: true,
-                    title: "Bullish FVG High"
-                });
+    fetch(`https://biquote.io/api/${selectedSymbol}/ohlc?interval=${interval}&limit=100`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`API request failed: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (!data.bars || !Array.isArray(data.bars)) {
+                throw new Error("No candle data found in API response");
             }
 
-            // Bearish FVG
-            const bearishFVG = {
-                    low: thirdCandle.high,
-                    if (thirdCandle.high < firstCandle.low) {
-                    high: firstCandle.low,
-                    time: thirdCandle.time
-                };
+            const chartData = data.bars
+                .slice()
+                .sort((a, b) => new Date(a.openTime) - new Date(b.openTime))
+                .map(candle => ({
+                    time: Math.floor(new Date(candle.openTime).getTime() / 1000),
+                    open: Number(candle.open),
+                    high: Number(candle.high),
+                    low: Number(candle.low),
+                    close: Number(candle.close),
+                    isOpen: candle.isOpen
+                }));
 
-                console.log("BEARISH FVG FOUND", bearishFVG);
+            console.log("Symbol:", selectedSymbol);
+            console.log("Timeframe:", interval);
+            console.log("Candles received:", chartData.length);
 
-                let fvgMitigated = false;
+            candlestickSeries.setData(
+                chartData.map(({ isOpen, ...candle }) => candle)
+            );
+            chart.timeScale().fitContent();
+            window.chartDataForFVG = chartData.filter(
+        candle => !candle.isOpen
+    );
 
-                for (let j = i + 1; j < confirmedChartData.length; j++) {
-                    const futureCandle = confirmedChartData[j];
+            
+        })
+        .catch(error => {
+            console.error("Could not load market candles:", error);
+        });
+        
+    
+// Looks for the MOST RECENT FVG of the type this trade needs that has NOT been mitigated.
+// BUY needs a bullish FVG, SELL needs a bearish FVG. Returns the zone, or null.
+function findLatestFVG(direction) {
+    const candles = window.chartDataForFVG || [];
 
-                    if (futureCandle.high >= bearishFVG.low) {
-                        fvgMitigated = true;
-                        console.log("BEARISH FVG MITIGATED", futureCandle);
-                        break;
-                    }
-                }
+    // Walk from the newest candle backwards, so the first match is the most recent one.
+    for (let i = candles.length - 1; i >= 2; i--) {
+        const c1 = candles[i - 2];
+        const c2 = candles[i - 1];
+        const c3 = candles[i];
 
-                console.log("FVG mitigated:", fvgMitigated);
+        // skip bad data (NaN) instead of crashing
+        if (![c1.high, c1.low, c3.high, c3.low].every(Number.isFinite)) continue;
 
-                drawFVG(
-                    bearishFVG.low,
-                    bearishFVG.high,
-                    bearishFVG.time
-                );
-
-                candlestickSeries.createPriceLine({
-                    price: bearishFVG.low,
-                    lineWidth: 2,
-                    lineVisible: true,
-                    axisLabelVisible: true,
-                    title: "Bearish FVG Low"
-                });
-
-                candlestickSeries.createPriceLine({
-                    price: bearishFVG.high,
-                    lineWidth: 2,
-                    lineVisible: true,
-                    axisLabelVisible: true,
-                    title: "Bearish FVG High"
-                });
-            }
+        let type = null, low, high;
+        if (direction === "BUY" && c3.low > c1.high) {          // bullish gap
+            type = "bullish"; low = c1.high; high = c3.low;
+        } else if (direction === "SELL" && c3.high < c1.low) {  // bearish gap
+            type = "bearish"; low = c3.high; high = c1.low;
         }
-    })
-    .catch(error => {
-        console.error("Could not load market candles:", error);
-    });
+        if (!type) continue;
+
+        // Mitigated = any later completed candle trades back into the gap (a wick counts).
+        // For a FULL fill instead, change "<= high" to "<= low" and ">= low" to ">= high".
+        let mitigated = false;
+        for (let j = i + 1; j < candles.length; j++) {
+            if (type === "bullish" && candles[j].low <= high) { mitigated = true; break; }
+            if (type === "bearish" && candles[j].high >= low) { mitigated = true; break; }
+        }
+        if (mitigated) continue;
+
+        return {
+            type: type,
+            low: low,
+            high: high,
+            startTime: c2.time,   // the zone starts at the middle candle, where the gap formed
+            color: type === "bullish" ? "rgba(0, 200, 0, 0.25)" : "rgba(255, 0, 0, 0.25)",
+            borderColor: type === "bullish" ? "rgb(0, 160, 0)" : "rgb(200, 0, 0)"
+        };
+    }
+    return null;
+}
+
+function checkFVG(direction) {
+    const candles = window.chartDataForFVG || [];
+    activeFVG = null;   // clear the old zone first
+
+    if (candles.length < 3) {
+        console.log("Not enough completed candles to check FVG.");
+        return false;
+    }
+
+    const fvg = findLatestFVG(direction);
+    if (!fvg) {
+        console.log("No unmitigated", direction === "BUY" ? "bullish" : "bearish", "FVG found.");
+        return false;
+    }
+
+    activeFVG = fvg;   // updateFVGZone() will now draw it
+    console.log("Unmitigated", fvg.type, "FVG marked:", fvg);
+    return true;
+}

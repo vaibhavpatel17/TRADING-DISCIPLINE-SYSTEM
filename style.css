@@ -41,8 +41,8 @@ table{
     
 }
 .chart-area{
-    display: flex;
-    justify-content:space-between ;
+    display:flex;
+    justify-content:center ;
 }
 .nav-bar{
     display: flex;
