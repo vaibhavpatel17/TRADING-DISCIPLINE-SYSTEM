@@ -61,7 +61,7 @@
     const buybutton=document.getElementById("buy-button");
     const sellbutton=document.getElementById("sell-button");
     buybutton.addEventListener("click",function(){
-        const hasFVG = checkFVG();
+              const hasFVG = checkFVG("BUY");
 console.log("FVG present:", hasFVG);
         
 if (userSetup.fvgRequired && !hasFVG) {
@@ -112,7 +112,7 @@ if (userSetup.fvgRequired && !hasFVG) {
 
     });
     sellbutton.addEventListener("click",function(){
-        const hasFVG = checkFVG();
+               const hasFVG = checkFVG("SELL");
         
 if (userSetup.fvgRequired && !hasFVG) {
     alert("Trade stopped: FVG is required, but no FVG was found.");
@@ -173,7 +173,7 @@ console.log("FVG present:", hasFVG);
     //fvgrequired inside the object usersetup
     console.log(userSetup.fvgRequired);
     const maxRR=document.getElementById("max-rr");
-    maxRR.addEventListener("click",function(){
+    maxRR.addEventListener("input",function(){
         userSetup.maximumRiskReward=Number(maxRR.value);
     });
     const saveSetup=document.getElementById("save-setup");
@@ -214,33 +214,58 @@ console.log("FVG present:", hasFVG);
     document.getElementById("chart-area").style.position = "relative";
    
         
-function drawFVG(low, high, time, color) {
-    const zone = document.createElement("div");
+    // activeFVG holds the one zone currently marked on the chart (or null when nothing is marked)
+    let activeFVG = null; //to hold the zone currently marked on the chart 
+    //let helps us to change the value later 
 
-    zone.className = "fvg-zone";
-    zone.style.position = "absolute";
+    // ONE rectangle, created once and re-used. Because it is the only one, repeated
+    // BUY/SELL clicks can never stack duplicates.
+    //creating the rectangle 
+    const fvgZone = document.createElement("div"); // we are creating new empty div which will be the shaded rectangle
+    fvgZone.className = "fvg-zone"; //we are giving the div a classname so that we can style it later 
+    //we are creating a class becuze we would require that to design our element
+    //confugure the  rectangle 
+    fvgZone.style.position = "absolute"; 
+    //position is the property of CSS and absolute is the value we are giving to the property 
+    //absolute allows us to position the element i.e fvgZone using co ordinates such as top left right centre
+    fvgZone.style.display = "none";          // hidden until a BUY/SELL click finds an FVG
+     //dosplay helps to control how an element must be displayed 
+    fvgZone.style.pointerEvents = "none";    // lets mouse clicks and drags pass through to the chart
+    //pointerevents controls how the element must respond to the pointer interactions
+    fvgZone.style.zIndex = "5";
+    //zindex controls the stacking  order of the positioned elements basically it helps to determine which elements will appear above every element
+    
+    //attach the rectangle to the chart
+    document.getElementById("chart-area").appendChild(fvgZone);
 
-    const x = chart.timeScale().timeToCoordinate(time);
-    const yHigh = candlestickSeries.priceToCoordinate(high);
-    const yLow = candlestickSeries.priceToCoordinate(low);
+    // Runs about 60 times a second and moves the rectangle to match the chart's current
+    // zoom and scroll, so it stays on the right candles and prices.
+   //psoition and resize the rectangle 
+    function updateFVGZone() {  //controsl where the fvg shold appear on the chart and update its size and postion 
+        let visible = false;
+        //at the start of the fucntion our code assumes that the FVg must be hidden 
 
-       if (x === null || yHigh === null || yLow === null) {
-        console.log("FVG not drawn, a coordinate was null:", { x, yHigh, yLow });
-        return;
+        if (activeFVG) {
+            const x = chart.timeScale().timeToCoordinate(activeFVG.startTime);
+            const yHigh = candlestickSeries.priceToCoordinate(activeFVG.high);
+            const yLow = candlestickSeries.priceToCoordinate(activeFVG.low);
+            const rightEdge = chart.timeScale().width();   // stops the zone before the price axis
+            //checking whether the rectangle can be drawn 
+            if (x !== null && yHigh !== null && yLow !== null && x < rightEdge) {
+                const left = Math.max(x, 0);
+                fvgZone.style.left = left + "px";
+                fvgZone.style.width = (rightEdge - left) + "px";
+                fvgZone.style.top = Math.min(yHigh, yLow) + "px";
+                fvgZone.style.height = Math.max(Math.abs(yLow - yHigh), 2) + "px";
+                fvgZone.style.background = activeFVG.color;
+                fvgZone.style.border = "1px solid " + activeFVG.borderColor;
+                visible = true;
+            }
+        }
+        fvgZone.style.display = visible ? "block" : "none";
+        requestAnimationFrame(updateFVGZone);
     }
-
-    zone.style.left = x + "px";
-    zone.style.right = "0";
-    zone.style.top = Math.min(yHigh, yLow) + "px";
-    zone.style.height = Math.abs(yLow - yHigh) + "px";
-    zone.style.background = color;
-    zone.style.border = "1px solid " + color;
-    zone.style.pointerEvents = "none";
-    zone.style.zIndex = "5";
-console.log("FVG element:", zone);
-console.log("Chart area:", document.getElementById("chart-area"));
-    document.getElementById("chart-area").appendChild(zone);
-}
+    requestAnimationFrame(updateFVGZone);
 
 
     
