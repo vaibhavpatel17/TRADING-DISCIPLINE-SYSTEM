@@ -15,9 +15,9 @@
     //document means the basically the webpage
     //getelemetbyid is a javascript function that means find the html element using its ID
     // so the lines means" hey broswer find me the html element whose id is ---- and stre it inside a variabl;e called symboldisplay
-    symbolDisplay.textContent=symbol;
     function test(){
         console.log("function is working");   
+      symbolDisplay.textContent=symbol;
         
     // test means "run the instructions what ever is written inside the test function" but we havent yet told the function to run we have told it just to create
     }
@@ -28,7 +28,7 @@
     symbolInput.addEventListener("change",function(){
     // .value means it gets the currently selected option from menu
     symbolDisplay.textContent=symbolInput.value;   // simboldisplay is where we want to show the symbol ,, textcontext andre it changes the text inside the HTML element .value gets whatever the user has selected 
-
+ loadCandles(true);
     })
     const timeFrameDisplay = document.getElementById("timeframe-display");
 
@@ -39,7 +39,9 @@
         timeFrame.addEventListener("change", function() {   //addeventlistener means "wait for something to happen to this element,,basically listen for a change"
     //so the above 2 lines says that go through each timeframe radiobuttons and listen for the user changing.
             timeFrameDisplay.textContent = timeFrame.value;
+           loadCandles(true);
         });     
+
     });
 
     //const==creates a variable whose value cannot be reassigned
@@ -82,23 +84,23 @@ if (userSetup.fvgRequired && !hasFVG) {
         console.log(takeProfit);
         console.log(quantity);
         const riskReward = takeProfit / sellStop;
-        console.log(riskReward);
         //const userSetup={};
         //usersetup is an empty container with curly braces,if it had double quotes then it wud contain emtry strings 
+        console.log(riskReward);
         //userSetup.maximumRiskReward=2;
         //usersetup is our tradesetup container
         //that acts as a container where  we put our parameters for entering the trade
         //minimumriskreward is the property we are creating 
         //so the line says that tarder wants atleast 1:2rr
-        console.log(userSetup.maximumRiskReward);
-        if (riskReward>userSetup.maximumRiskReward){
+        console.log(userSetup.minimumRiskReward);
+        if (riskReward<userSetup.minimumRiskReward){
             alert("trade stopped due to inappropriate RR");
             return; // we have return here so that when the buyer clicks BUY button and RR exceeds his initial setup then stop the trade 
             
             console.log("trade stopped with exceeding RR");
             
         }
-
+     
 
         //variable from "" to "BUY"
         //buybtton is our variable pointing towards our BUYBUTTON
@@ -130,8 +132,8 @@ console.log("FVG present:", hasFVG);
         console.log(sell.value);
         console.log(tp.value);
         
-
     });
+        
     const quant=document.getElementById("quantity-input");
     console.log(quant.value);
     quant.addEventListener("input",function(){  //input is for typing in the placeholder
@@ -163,7 +165,18 @@ console.log("FVG present:", hasFVG);
         const takeProfit=Number(tp.value)
         console.log(takeProfit);
     });
-    const userSetup={};
+    const userSetup={
+       fvgRules:{   //inside an object a property must use a colon(:) not equals
+        validity:null,
+        mitigation:null,
+      },
+      timeFrameRules:{
+        entryTimeframe:null,
+        higherTimeFrameConfirmation:false,//stores whether the trader requires high time frame confluence
+      },
+        maxRiskPercentage:null // we dont use another separate object for property because its the only propery we are using
+
+    };//this object  has been created to store traders settings, in this object is evrything inside outer braces
     const fvgRule=document.getElementById("FVG-rule");
     userSetup.fvgRequired=fvgRule.checked;
     //usersetup is the object we created 
@@ -171,12 +184,14 @@ console.log("FVG present:", hasFVG);
     //.checked asks if the box is already ticked 
     //usersetup.fvgrequired means we are creating a property called
     //fvgrequired inside the object usersetup
+
     console.log(userSetup.fvgRequired);
     const maxRR=document.getElementById("max-rr");
     maxRR.addEventListener("input",function(){
-        userSetup.maximumRiskReward=Number(maxRR.value);
-    });
-    const saveSetup=document.getElementById("save-setup");
+        userSetup.minimumRiskReward=Number(maxRR.value);
+        
+      });
+      const saveSetup=document.getElementById("save-setup");
     console.log(saveSetup);
     saveSetup.addEventListener("click",function(){
         userSetup.fvgRequired=fvgRule.checked;
@@ -373,62 +388,269 @@ console.log("FVG present:", hasFVG);
 
     //this is where we load the real candles from our local candles.json file
 
-    const selectedTimeFrame =
-        document.querySelector('input[name="time-frame"]:checked')?.value || "1min";
+    
+// ===================== LIVE CANDLE SETTINGS =====================
+// Change these numbers to tune the chart. Nothing else needs editing.
+const REFRESH_INTERVAL_MS = 1000;  // how often we ask BiQuote for the newest candles (1000 = 1 second)
+const FULL_LOAD_BARS = 500;        // candles loaded when the page opens and when you switch symbol/timeframe
+const REFRESH_BARS = 5;            // newest candles requested on every refresh (small and fast)
+const MAX_BACKOFF_MS = 30000;      // after errors we wait longer between tries, but never more than this
 
-    const intervalMap = {
-        "1min": "1m",
-        "5min": "5m",
-        "15min": "15m",
-        "1hr": "1h",
-        "4hr": "4h"
+// ===================== LIVE CANDLE STATE =====================
+let candleStore = [];         // our own copy of every candle drawn on the chart, oldest to newest
+let selectionId = 0;          // goes up by 1 only when YOU pick a new symbol or timeframe
+let inFlight = null;          // the request running right now (null = none), so requests never pile up
+let forceFullNext = false;    // true = the next refresh must reload all candles (a gap or correction was found)
+let consecutiveFailures = 0;  // how many refreshes in a row have failed
+let unchangedCount = 0;       // how many refreshes in a row brought no new data
+let refreshTimer = null;
+
+// true only if two candles are identical in every field
+function sameCandle(a, b) {
+  return a.time === b.time && a.open === b.open && a.high === b.high &&
+         a.low === b.low && a.close === b.close && a.isOpen === b.isOpen;
+}
+
+// Turns the API's bars into clean chart candles: real numbers only, oldest first, one candle per time.
+function normalizeBars(bars) {
+  const clean = bars
+    .map(candle => ({
+      time: Math.floor(new Date(candle.openTime).getTime() / 1000),
+      open: Number(candle.open),
+      high: Number(candle.high),
+      low: Number(candle.low),
+      close: Number(candle.close),
+      isOpen: candle.isOpen
+    }))
+    .filter(candle =>
+      Number.isFinite(candle.time) &&
+      Number.isFinite(candle.open) &&
+      Number.isFinite(candle.high) &&
+      Number.isFinite(candle.low) &&
+      Number.isFinite(candle.close)
+    )
+    .sort((a, b) => a.time - b.time);
+  // if two candles share a time, keep only the later one (the chart rejects duplicates)
+  return clean.filter((c, i) => i === clean.length - 1 || c.time !== clean[i + 1].time);
+}
+
+// Decides HOW to bring the chart up to date. It changes nothing itself; it only returns a plan:
+//   updates         = candles to send to the chart with update(), oldest first
+//   needsFullReload = true when update() cannot do the job (missed candles, or an old candle was corrected)
+function planCandleUpdate(store, incoming) {
+  const plan = { updates: [], needsFullReload: false };
+  if (store.length === 0 || incoming.length === 0) { plan.needsFullReload = true; return plan; }
+
+  let lastDrawn = store[store.length - 1];
+  // The newest data starts AFTER our last candle, so we may have missed candles in between.
+  if (incoming[0].time > lastDrawn.time) { plan.needsFullReload = true; return plan; }
+
+  const known = new Map(store.map(c => [c.time, c]));
+  for (const c of incoming) {
+    if (c.time < lastDrawn.time) {
+      // an older candle: it must match what we already drew, because update() cannot change old candles
+      const old = known.get(c.time);
+      if (!old || !sameCandle(old, c)) { plan.needsFullReload = true; plan.updates = []; return plan; }
+    } else if (c.time === lastDrawn.time) {
+      // the candle that is still forming: update it only if its numbers changed
+      if (!sameCandle(lastDrawn, c)) { plan.updates.push(c); lastDrawn = c; }
+    } else {
+      // a brand new candle
+      plan.updates.push(c); lastDrawn = c;
+    }
+  }
+  return plan;
+}
+
+// FVG detection only uses finished candles, so keep that list in step with candleStore.
+function syncFVGData() {
+  window.chartDataForFVG = candleStore.filter(candle => !candle.isOpen);
+}
+function runMarketAnalysis() {
+    console.log("[analysis] Starting market analysis...");
+    const bullishFVG = findLatestFVG("BUY");
+    const bearishFVG = findLatestFVG("SELL");
+
+    window.marketAnalysis = {
+        bullishFVG,
+        bearishFVG,
+        lastUpdated: new Date()
+
+   
     };
 
-    const selectedSymbol = symbolInput.value;
-    const interval = intervalMap[selectedTimeFrame];
+    console.log("[analysis] Market analysis updated:", window.marketAnalysis);
 
-    fetch(`https://biquote.io/api/${selectedSymbol}/ohlc?interval=${interval}&limit=100`)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`API request failed: ${response.status}`);
-            }
-            return response.json();
-        })
-        .then(data => {
-            if (!data.bars || !Array.isArray(data.bars)) {
-                throw new Error("No candle data found in API response");
-            }
+    // FVG analysis will run here
+    let bullishApproachLevel=null;
+    if(bullishFVG){
+       bullishApproachLevel=fvgApproachLevel("BUY",bullishFVG.high);
+    }
+    
+}
+// Replaces ALL candles on the chart. keepView = true remembers where you had scrolled to.
+function applyFullData(chartData, keepView) {
+  let savedRange = null;
+  const lastTimeBefore = candleStore.length ? candleStore[candleStore.length - 1].time : null;
+  if (keepView) {
+    try { savedRange = chart.timeScale().getVisibleRange(); } catch (e) { savedRange = null; }
+  }
+  candlestickSeries.setData(chartData.map(({ isOpen, ...candle }) => candle));
+  candleStore = chartData;
+  syncFVGData();
+  runMarketAnalysis();
+  // Restore the view only if you had scrolled away from the newest candle.
+  if (savedRange && lastTimeBefore !== null && savedRange.to < lastTimeBefore) {
+    try { chart.timeScale().setVisibleRange(savedRange); } catch (e) { /* ignore: view stays as the chart left it */ }
+  }
+}
 
-            const chartData = data.bars
-                .slice()
-                .sort((a, b) => new Date(a.openTime) - new Date(b.openTime))
-                .map(candle => ({
-                    time: Math.floor(new Date(candle.openTime).getTime() / 1000),
-                    open: Number(candle.open),
-                    high: Number(candle.high),
-                    low: Number(candle.low),
-                    close: Number(candle.close),
-                    isOpen: candle.isOpen
-                }));
+// loadCandles(true)  = you picked a new symbol/timeframe (or the page just opened): load everything.
+// loadCandles(false) = automatic refresh: ask only for the newest candles and patch the chart.
+async function loadCandles(isNewSelection = false) {
+  if (isNewSelection) {
+    selectionId++;
+    if (inFlight) inFlight.abort();   // cancel the old symbol's request
+    inFlight = null;
+    forceFullNext = false;
+    consecutiveFailures = 0;
+    unchangedCount = 0;
+    candleStore = [];
+    window.chartDataForFVG = [];      // old symbol's candles must not be used for FVG checks
+    activeFVG = null;                 // old symbol's zone must not stay on the chart
+  } else if (inFlight) {
+    return;                           // a request is already running: skip instead of piling up
+  }
 
-            console.log("Symbol:", selectedSymbol);
-            console.log("Timeframe:", interval);
-            console.log("Candles received:", chartData.length);
+  const mySelection = selectionId;
+  const fullLoad = isNewSelection || forceFullNext || candleStore.length === 0;
 
-            candlestickSeries.setData(
-                chartData.map(({ isOpen, ...candle }) => candle)
-            );
-            chart.timeScale().fitContent();
-            window.chartDataForFVG = chartData.filter(
-        candle => !candle.isOpen
+  const selectedTimeFrame =
+    document.querySelector('input[name="time-frame"]:checked')?.value || "1min";
+
+  const intervalMap = {
+    "1min": "1m",
+    "5min": "5m",
+    "15min": "15m",
+    "1hr": "1h",
+    "4hr": "4h"
+  };
+
+  const selectedSymbol = symbolInput.value.trim();
+  const interval = intervalMap[selectedTimeFrame];
+
+  if (!selectedSymbol || !interval) {
+    console.error("Invalid symbol or timeframe");
+    return;
+  }
+
+  const controller = new AbortController();
+  inFlight = controller;
+
+  try {
+    const barsWanted = fullLoad ? FULL_LOAD_BARS : REFRESH_BARS;
+    console.log("Full load:", fullLoad);
+console.log("Bars requested:", barsWanted);
+    const response = await fetch(
+      `https://biquote.io/api/${encodeURIComponent(selectedSymbol)}/ohlc?interval=${interval}&limit=${barsWanted}`,
+      { signal: controller.signal }
     );
 
-            
-        })
-        .catch(error => {
-            console.error("Could not load market candles:", error);
-        });
-        
+    if (!response.ok) {
+      throw new Error(`API request failed: ${response.status}${response.status === 429 ? " (rate limited)" : ""}`);
+    }
+
+    const data = await response.json();
+    console.log("Candles received:", data.bars.length);
+console.log("First candle:", data.bars[0]);
+console.log("Last candle:", data.bars[data.bars.length - 1]);
+
+    // You picked something else while this request was running: throw this answer away.
+    if (mySelection !== selectionId) return;
+
+    if (!Array.isArray(data?.bars)) {
+      throw new Error("No candle data found in API response");
+    }
+
+    const chartData = normalizeBars(data.bars);
+    if (chartData.length === 0) {
+      throw new Error("The API returned no valid candles");
+    }
+
+    if (fullLoad) {
+      applyFullData(chartData, !isNewSelection);
+      if (isNewSelection) chart.timeScale().fitContent();   // only fit the view when YOU switched
+      forceFullNext = false;
+      unchangedCount = 0;
+      console.log(`[candles] loaded ${chartData.length} candles for ${selectedSymbol} (${interval})`);
+    } else {
+      const plan = planCandleUpdate(candleStore, chartData);
+
+      if (plan.needsFullReload) {
+        forceFullNext = true;
+        console.log("[candles] gap or correction detected, reloading all candles on the next refresh");
+      } else if (plan.updates.length === 0) {
+        unchangedCount++;
+        // Log the first one and then once a minute, so the console does not fill up.
+        if (unchangedCount === 1 || unchangedCount % 60 === 0) {
+          console.log(`[candles] unchanged x${unchangedCount} (normal while the market is closed)`);
+        }
+      } else {
+        for (const c of plan.updates) {
+          const { isOpen, ...bar } = c;
+          candlestickSeries.update(bar);   // same time = replace the forming candle, newer time = add a candle
+          const last = candleStore[candleStore.length - 1];
+          if (last && last.time === c.time) candleStore[candleStore.length - 1] = c;
+          else candleStore.push(c);
+        }
+        syncFVGData();
+        runMarketAnalysis();
+        unchangedCount = 0;
+        const newest = plan.updates[plan.updates.length - 1];
+        console.log(`[candles] updated ${plan.updates.length} candle(s), newest close ${newest.close}`);
+      }
+    }
+
+    consecutiveFailures = 0;
+
+  } catch (error) {
+    if (error.name === "AbortError" || mySelection !== selectionId) return;   // cancelled on purpose
+    consecutiveFailures++;
+    console.error(
+      `[candles] refresh failed (${consecutiveFailures} in a row), next try in ${nextRefreshDelay() / 1000}s:`,
+      error
+    );
+  } finally {
+    if (inFlight === controller) inFlight = null;
+  }
+}
+function nextRefreshDelay() {
+
+// Wait time before the next refresh: normal after success, doubling after each failure up to MAX_BACKOFF_MS.
+  return Math.min(REFRESH_INTERVAL_MS * Math.pow(2, consecutiveFailures), MAX_BACKOFF_MS);
+}
+
+// One refresh, then schedule the next. The next one is only scheduled AFTER this one finishes,
+// so refreshes can never overlap.
+async function refreshTick() {
+  if (!document.hidden) await loadCandles(false);   // skip while the browser tab is hidden
+  refreshTimer = setTimeout(refreshTick, nextRefreshDelay());
+}
+
+document.addEventListener("visibilitychange", function () {
+// When you come back to the tab, refresh straight away.
+  if (!document.hidden) {
+    clearTimeout(refreshTimer);
+    refreshTick();
+  }
+});
+console.log("INITIAL LOAD IS RUNNING");
+// Initial chart load, then start the refresh cycle.
+loadCandles(true).then(() => {
+   console.log("INITIAL LOAD COMPLETED");
+  refreshTimer = setTimeout(refreshTick, nextRefreshDelay());
+});
+
     
 // Looks for the MOST RECENT FVG of the type this trade needs that has NOT been mitigated.
 // BUY needs a bullish FVG, SELL needs a bearish FVG. Returns the zone, or null.
@@ -458,9 +680,9 @@ function findLatestFVG(direction) {
         for (let j = i + 1; j < candles.length; j++) {
             if (type === "bullish" && candles[j].low <= high) { mitigated = true; break; }
             if (type === "bearish" && candles[j].high >= low) { mitigated = true; break; }
+
         }
         if (mitigated) continue;
-
         return {
             type: type,
             low: low,
@@ -492,3 +714,16 @@ function checkFVG(direction) {
     console.log("Unmitigated", fvg.type, "FVG marked:", fvg);
     return true;
 }
+function fvgApproachLevel(fvgDirection,fvgboundaryPrice){
+  //the inputs we are going to give to this function is fvgDirection and fvgBoundaryPrice
+  const pipDistance=0.0010;
+  if (fvgDirection=="BUY")  //double quotes is required because buy is a string value 
+  {
+    return fvgboundaryPrice+pipDistance;
+  }
+  else
+  {
+    return fvgboundaryPrice-pipDistance;
+  }
+}
+console.log(fvgApproachLevel("BUY",1.0860));
