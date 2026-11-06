@@ -404,7 +404,7 @@ let forceFullNext = false;    // true = the next refresh must reload all candles
 let consecutiveFailures = 0;  // how many refreshes in a row have failed
 let unchangedCount = 0;       // how many refreshes in a row brought no new data
 let refreshTimer = null;
-
+let previousMarketPrice=null;
 // true only if two candles are identical in every field
 function sameCandle(a, b) {
   return a.time === b.time && a.open === b.open && a.high === b.high &&
@@ -470,20 +470,7 @@ function runMarketAnalysis() {
     console.log("[analysis] Starting market analysis...");
     const bullishFVG = findLatestFVG("BUY");
     const bearishFVG = findLatestFVG("SELL");
-
-    window.marketAnalysis = {
-        bullishFVG,
-        bearishFVG,
-        lastUpdated: new Date(),
-        bullishApproachLevel,
-        bearishApproachLevel
-
-    };
-
-    console.log("[analysis] Market analysis updated:", window.marketAnalysis);
-
-    // FVG analysis will run here
-    let bullishApproachLevel=null;
+     let bullishApproachLevel=null;
     if(bullishFVG){
        bullishApproachLevel=fvgApproachLevel("BUY",bullishFVG.high);
     }
@@ -492,6 +479,20 @@ function runMarketAnalysis() {
     {
       bearishApproachLevel=fvgApproachLevel("SELL",bearishFVG.low)
     }
+    window.marketAnalysis = {
+        bullishFVG,
+        bearishFVG,
+        lastUpdated: new Date(),
+        bullishApproachLevel,
+        bearishApproachLevel, 
+        //storing bullish and bearish approach levels inside window.marketanalysis
+        // so whenever we need to use both those approach levels we need to do it by window.marketAnalysis.bullishApproachLevel
+
+    };
+
+    console.log("[analysis] Market analysis updated:", window.marketAnalysis);
+
+    // FVG analysis will run here
 }
 // Replaces ALL candles on the chart. keepView = true remembers where you had scrolled to.
 function applyFullData(chartData, keepView) {
@@ -613,12 +614,41 @@ console.log("Last candle:", data.bars[data.bars.length - 1]);
         unchangedCount = 0;
         const newest = plan.updates[plan.updates.length - 1];
         console.log(`[candles] updated ${plan.updates.length} candle(s), newest close ${newest.close}`);
-      }
+        
+        const currentMarketPrice = newest.close;
+if (previousMarketPrice === null) {
+    previousMarketPrice = currentMarketPrice;
+}
+else {
+    const bullishLevel = window.marketAnalysis?.bullishApproachLevel;
+    const bearishLevel = window.marketAnalysis?.bearishApproachLevel;
+
+    if (
+        bullishLevel !== null &&
+        bullishLevel !== undefined &&
+        previousMarketPrice > bullishLevel &&
+        currentMarketPrice <= bullishLevel
+    ) {
+        console.log("Bullish FVG approach level reached!");
     }
 
+    if (
+        bearishLevel !== null &&
+        bearishLevel !== undefined &&
+        previousMarketPrice < bearishLevel &&
+        currentMarketPrice >= bearishLevel
+    ) {
+        console.log("Bearish FVG approach level reached!");
+    }
+
+    previousMarketPrice = currentMarketPrice;
+}
+      }
+    }
     consecutiveFailures = 0;
 
   } catch (error) {
+
     if (error.name === "AbortError" || mySelection !== selectionId) return;   // cancelled on purpose
     consecutiveFailures++;
     console.error(
@@ -703,6 +733,7 @@ function findLatestFVG(direction) {
 function checkFVG(direction) {
     const candles = window.chartDataForFVG || [];
     activeFVG = null;   // clear the old zone first
+    let hasRestoredFVGSelection = false;
 
     if (candles.length < 3) {
         console.log("Not enough completed candles to check FVG.");
@@ -716,6 +747,14 @@ function checkFVG(direction) {
     }
 
     activeFVG = fvg;   // updateFVGZone() will now draw it
+    localStorage.setItem("selectedFVG", JSON.stringify({
+    direction: direction,
+    startTime: fvg.startTime
+}));
+//localstorage:stores info in the browser
+//selectedFVG is the name under which we are saving it 
+//JSON.stringify: converts JS into strings cause localstorages saves strings 
+//direction:buy/sell
     console.log("Unmitigated", fvg.type, "FVG marked:", fvg);
     return true;
 }
