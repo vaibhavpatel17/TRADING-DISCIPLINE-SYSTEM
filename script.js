@@ -474,9 +474,10 @@ function runMarketAnalysis() {
     window.marketAnalysis = {
         bullishFVG,
         bearishFVG,
-        lastUpdated: new Date()
+        lastUpdated: new Date(),
+        bullishApproachLevel,
+        bearishApproachLevel
 
-   
     };
 
     console.log("[analysis] Market analysis updated:", window.marketAnalysis);
@@ -486,7 +487,11 @@ function runMarketAnalysis() {
     if(bullishFVG){
        bullishApproachLevel=fvgApproachLevel("BUY",bullishFVG.high);
     }
-    
+    let bearishApproachLevel=null;
+    if (bearishFVG)
+    {
+      bearishApproachLevel=fvgApproachLevel("SELL",bearishFVG.low)
+    }
 }
 // Replaces ALL candles on the chart. keepView = true remembers where you had scrolled to.
 function applyFullData(chartData, keepView) {
