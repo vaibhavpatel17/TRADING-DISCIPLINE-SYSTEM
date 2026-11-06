@@ -493,6 +493,37 @@ function runMarketAnalysis() {
     console.log("[analysis] Market analysis updated:", window.marketAnalysis);
 
     // FVG analysis will run here
+     let hasRestoredFVGSelection = false;
+if (!hasRestoredFVGSelection && window.chartDataForFVG.length > 0) {
+//NOT(!)operator reverses the booleans value given to hasRestoredFVGSelection while declaring 
+//window.chartDataForFVG.length > 0):checs whether are there any candles loaded 
+    const savedSelection = JSON.parse(
+        localStorage.getItem("selectedFVG")
+    );
+//converts string into JSON and saves in that variable
+    if (savedSelection) {//if there has been any FVG selected before reloading
+        const savedFVG = savedSelection.direction === "BUY"
+            ? bullishFVG
+            : savedSelection.direction === "SELL"
+                ? bearishFVG
+                : null;
+
+        if (savedFVG && savedFVG.startTime === savedSelection.startTime) {
+
+            activeFVG = savedFVG;
+
+            console.log("Previously selected FVG restored:", activeFVG);
+
+        } else {
+
+            console.log("Previously selected FVG is no longer available.");
+          }
+
+        }
+    hasRestoredFVGSelection = true;
+}
+
+
 }
 // Replaces ALL candles on the chart. keepView = true remembers where you had scrolled to.
 function applyFullData(chartData, keepView) {
@@ -733,7 +764,7 @@ function findLatestFVG(direction) {
 function checkFVG(direction) {
     const candles = window.chartDataForFVG || [];
     activeFVG = null;   // clear the old zone first
-    let hasRestoredFVGSelection = false;
+   
 
     if (candles.length < 3) {
         console.log("Not enough completed candles to check FVG.");
