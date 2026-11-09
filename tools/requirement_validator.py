@@ -13,4 +13,3 @@ def validate_requirements(request):
     
     return errors
 validate_requirements(request1)
-print(validate_requirements(request1))
